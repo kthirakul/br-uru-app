@@ -235,7 +235,8 @@ export const renderAdmin = d => {
         <WrapAdmin>
           <HeaderAdmin item={item} d={d} />
           <WrapAuto>
-            
+            start booksetting
+
           </WrapAuto>
         </WrapAdmin>
       );
