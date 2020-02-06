@@ -533,4 +533,38 @@ export const changeStatus = (
   }
 };
 
+export const onChangeReqSet = (e, d, type) => {
+  e.preventDefault();
+  let value = e.target.value;
+  console.log("bookFuncs.js |value| = ", value);
+  if (type === "sentBefore") {
+    d.setReqSet({
+      ...d.reqSet,
+      sentBefore: value < 1 ? 0 : Number(value)
+    });
+  }
+  if (type === "expDay") {
+    d.setReqSet({
+      ...d.reqSet,
+      expDay: value < 1 ? 0 : Number(value)
+    });
+  }
+};
 
+export const resetReqSet = (d, start) => {
+  if (start) {
+    d.setReqSet({
+      sentBefore: 3,
+      expDay: 7
+    });
+  } else {
+    d.setReqSet({
+      sentBefore: d.bookPack.sentBefore,
+      expDay: d.bookPack.expDay
+    });
+  }
+};
+
+export const onReqSetUpdate = () => {
+  console.log('bookFuncs.js |"setUpdate"| = ', "setUpdate");
+};

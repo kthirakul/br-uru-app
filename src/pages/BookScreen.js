@@ -27,7 +27,7 @@ import {
   dialogChangeStatus,
   dialogDetailAdmin
 } from "../components/BookScreen/renderBookScreen";
-import { oldTimeReset, removeBook } from "../funcs/bookFuncs";
+import { oldTimeReset, removeBook, onChangeReqSet } from "../funcs/bookFuncs";
 
 const BookScreen = ({ history }) => {
   const context = useContext(Context);
@@ -47,11 +47,22 @@ const BookScreen = ({ history }) => {
   const [page, setPage] = useState("booking");
 
   const [hold, setHold] = useState("");
+  const [reqSet, setReqSet] = useState({
+    sentBefore: 0,
+    expDay: 0
+  });
 
   useEffect(() => {
     setHold("สร้างการจอง");
     sessionStorage.setItem("addLog", "status");
   }, []);
+
+  useEffect(() => {
+    setReqSet({
+      sentBefore: bookPack.sentBefore,
+      expDay: bookPack.expDay
+    });
+  }, [bookPack.sentBefore, bookPack.expDay]);
 
   useEffect(() => {
     if (admin) {
@@ -271,7 +282,11 @@ const BookScreen = ({ history }) => {
                     newStatus,
                     setNewStatus,
                     loading,
-                    setLoading
+                    setLoading,
+                    reqSet,
+                    setReqSet,
+                    onChangeReqSet,
+                    bookPack
                   })}
             </WrapInList>
           </WrapListBook>

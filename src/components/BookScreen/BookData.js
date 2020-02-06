@@ -65,13 +65,13 @@ export const menus = (admin, render) => {
       page: "admin"
     },
     {
-      menu: "ตั้งค่าการจอง",
-      icon: <PermDataSetting style={{ marginRight: render ? 6 : 18 }} />,
+      menu: "ลบการจอง",
+      icon: <DeleteSweep style={{ marginRight: render ? 6 : 18 }} />,
       page: "admin"
     },
     {
-      menu: "ลบการจอง",
-      icon: <DeleteSweep style={{ marginRight: render ? 6 : 18 }} />,
+      menu: "ตั้งค่าคำร้อง",
+      icon: <PermDataSetting style={{ marginRight: render ? 6 : 18 }} />,
       page: "admin"
     },
     {
@@ -106,5 +106,3 @@ export const menus = (admin, render) => {
 
   return admin ? [...adminMenu, ...userMenu] : userMenu;
 };
-
-

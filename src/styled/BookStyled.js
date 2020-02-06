@@ -44,3 +44,63 @@ export const WrapSearch = styled.div`
   background: white;
   border-radius: 99px;
 `;
+
+export const BookSettingHead = styled.div`
+  font-weight: bold;
+`;
+
+export const WrapBookSetting = styled.div`
+  padding: 12px;
+`;
+
+export const WrapChooseSetting = styled.div`
+  padding-left: 12px;
+  margin-top: 12px;
+`;
+
+export const InputSet = styled.input`
+  border: none;
+  outline: none;
+  border-radius: 12px;
+  width: 40px;
+  text-align: center;
+  padding: 6px 0 6px 14px;
+  background: rgba(255, 255, 255, 0.8);
+`;
+
+export const ItemSet = styled.div`
+  background: rgba(0, 0, 0, 0.075);
+  border-radius: 99px;
+  padding: 8px 10px;
+  margin-bottom: 12px;
+`;
+
+export const SaveReqSet = styled.div`
+  width: 75px;
+  padding: 12px 0;
+  background: ${props =>
+    props.save ? "#aa00ff" : props.start ? "#bfb217" : "#ff4081"};
+  border-radius: 12px;
+  color: white;
+  margin-right: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: ${props =>
+    props.checked === 1 || props.checked === undefined ? "pointer" : "default"};
+  transition: 0.125s;
+  :hover {
+    background: ${props =>
+      props.save ? "#9a07e4" : props.start ? "#a69b13" : "#e23471"};
+  }
+  opacity: ${props => props.checked === 0 && 0.2};
+`;
+
+export const WrapSaveReqSet = styled.div`
+  display: flex;
+`;
+
+export const ErrorReqSet = styled.span`
+  color: #820b0b;
+  font-style: italic;
+`;

@@ -34,7 +34,9 @@ import {
   bookChecked,
   checkDateExp,
   setBookTime,
-  saveEditBook
+  saveEditBook,
+  resetReqSet,
+  onReqSetUpdate
 } from "../../funcs/bookFuncs";
 import { emptyFunc } from "../../funcs/emptyFunc";
 import relativeTime from "dayjs/plugin/relativeTime";
@@ -44,7 +46,15 @@ import {
   TAdmin,
   WrapSearch,
   SInputAdmin,
-  WrapAuto
+  WrapAuto,
+  BookSettingHead,
+  WrapBookSetting,
+  WrapChooseSetting,
+  InputSet,
+  ItemSet,
+  SaveReqSet,
+  WrapSaveReqSet,
+  ErrorReqSet
 } from "../../styled/BookStyled";
 import { renderAllBook } from "../AllBooks/AllBookComps";
 dayjs.extend(relativeTime);
@@ -230,13 +240,78 @@ export const renderAdmin = d => {
         </WrapAdmin>
       );
 
-    case "ตั้งค่าการจอง":
+    case "ตั้งค่าคำร้อง":
+      const checkedSet =
+        (d.bookPack.sentBefore !== d.reqSet.sentBefore ||
+          d.bookPack.expDay !== d.reqSet.expDay) &&
+        d.reqSet.sentBefore > 0 &&
+        d.reqSet.expDay > 0 &&
+        d.reqSet.expDay > d.reqSet.sentBefore;
+      console.log("renderBookScreen.js |checkedSet| = ", checkedSet);
       return (
         <WrapAdmin>
           <HeaderAdmin item={item} d={d} />
           <WrapAuto>
-            start booksetting 1
+            <WrapBookSetting>
+              <BookSettingHead>กำหนดการส่งหนังสือร้องขอ</BookSettingHead>
 
+              {d.bookPack.sentBefore && d.bookPack.expDay ? (
+                <WrapChooseSetting>
+                  <ItemSet>
+                    อย่างเร็วสุดภายใน{" "}
+                    <InputSet
+                      onChange={e => d.onChangeReqSet(e, d, "sentBefore")}
+                      type="number"
+                      value={d.reqSet.sentBefore ? d.reqSet.sentBefore : ""}
+                    />{" "}
+                    วัน{" "}
+                    {d.reqSet.sentBefore < 1 && (
+                      <ErrorReqSet>*ระยะเวลาผิดพลาด</ErrorReqSet>
+                    )}
+                  </ItemSet>
+                  <ItemSet>
+                    อย่างช้าสุดภายใน{" "}
+                    <InputSet
+                      onChange={e => d.onChangeReqSet(e, d, "expDay")}
+                      type="number"
+                      value={d.reqSet.expDay ? d.reqSet.expDay : ""}
+                    />{" "}
+                    วัน{" "}
+                    {d.reqSet.expDay < 1 ? (
+                      <ErrorReqSet>*ระยะเวลาผิดพลาด</ErrorReqSet>
+                    ) : (
+                      d.reqSet.expDay <= d.reqSet.sentBefore && (
+                        <ErrorReqSet>*ต้องมากกว่าเวลาเร็วสุด</ErrorReqSet>
+                      )
+                    )}
+                  </ItemSet>
+
+                  <WrapSaveReqSet>
+                    <SaveReqSet
+                      save={"true"}
+                      checked={checkedSet ? 1 : 0}
+                      onClick={
+                        checkedSet === true ? () => onReqSetUpdate() : undefined
+                      }
+                    >
+                      บันทึก
+                    </SaveReqSet>
+
+                    <SaveReqSet onClick={() => resetReqSet(d)}>
+                      รีเซ็ท
+                    </SaveReqSet>
+                    <SaveReqSet
+                      start={"true"}
+                      onClick={() => resetReqSet(d, "start")}
+                    >
+                      ค่าเริ่มต้น
+                    </SaveReqSet>
+                  </WrapSaveReqSet>
+                </WrapChooseSetting>
+              ) : (
+                <CircularProgress style={{ marginTop: 24, marginLeft: 24 }} />
+              )}
+            </WrapBookSetting>
           </WrapAuto>
         </WrapAdmin>
       );
@@ -875,7 +950,11 @@ const renderListBook = (
   const errorBook = bookChecked(bookPack, bookdata, roomdata);
 
   const onChangeCreate = () => {
-    if (bookPack.roombook) {
+    if (
+      bookPack.roombook &&
+      bookPack.datebook !== "Invalid Date" &&
+      bookPack.datebook !== null
+    ) {
       if (bookPack.createPage === "create") {
         setLoading(true);
         if (
@@ -983,7 +1062,7 @@ const CommaText = styled.div`
 `;
 const SAddData = styled.div`
   display: flex;
-  flex-direction:${props => props.topic === "อุปกรณ์" && "column"}
+  flex-direction: ${props => props.topic === "อุปกรณ์" && "column"};
 `;
 
 const addDetail = (res, roomdata) => {
