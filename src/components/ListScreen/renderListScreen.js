@@ -155,7 +155,7 @@ export const renderPickedBook = d => {
                       <Detail>
                         {bookstatus === "รอหนังสือร้องขอ"
                           ? exp
-                          : "ไม่มีวันสิ้นสุดจนถึงวันจอง"}
+                          : "ไม่หมดอายุจนถึงวันใช้ห้อง"}
                       </Detail>
                     </BookIn>
                   </BookItem>

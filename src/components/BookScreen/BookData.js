@@ -9,7 +9,7 @@ import {
   Update,
   DescriptionOutlined,
   Assessment,
-  DeleteSweep,
+  LayersClear,
   PermDataSetting,
   EditLocation,
   Person,
@@ -64,16 +64,7 @@ export const menus = (admin, render) => {
       icon: <Assessment style={{ marginRight: render ? 6 : 18 }} />,
       page: "admin"
     },
-    {
-      menu: "ลบการจอง",
-      icon: <DeleteSweep style={{ marginRight: render ? 6 : 18 }} />,
-      page: "admin"
-    },
-    {
-      menu: "ตั้งค่าคำร้อง",
-      icon: <PermDataSetting style={{ marginRight: render ? 6 : 18 }} />,
-      page: "admin"
-    },
+
     {
       menu: "จัดการห้อง",
       icon: <EditLocation style={{ marginRight: render ? 6 : 18 }} />,
@@ -85,10 +76,20 @@ export const menus = (admin, render) => {
       page: "admin"
     },
     {
-      menu: "แก้ไขการติดต่อ",
-      icon: <CallEnd style={{ marginRight: render ? 8 : 18 }} />,
+      menu: "ตั้งค่าแอป",
+      icon: <PermDataSetting style={{ marginRight: render ? 6 : 18 }} />,
+      page: "admin"
+    },
+    {
+      menu: "ล้างข้อมูล",
+      icon: <LayersClear style={{ marginRight: render ? 6 : 18 }} />,
       page: "admin"
     }
+    // {
+    //   menu: "แก้ไขการติดต่อ",
+    //   icon: <CallEnd style={{ marginRight: render ? 8 : 18 }} />,
+    //   page: "admin"
+    // }
   ];
 
   const userMenu = [

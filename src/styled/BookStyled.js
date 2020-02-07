@@ -47,10 +47,13 @@ export const WrapSearch = styled.div`
 
 export const BookSettingHead = styled.div`
   font-weight: bold;
+  display: flex;
+  align-items: center;
 `;
 
 export const WrapBookSetting = styled.div`
-  padding: 12px;
+  padding: 12px 12px 20px 12px;
+  border-bottom: 2px solid rgba(0, 0, 0, 0.2);
 `;
 
 export const WrapChooseSetting = styled.div`
@@ -62,22 +65,29 @@ export const InputSet = styled.input`
   border: none;
   outline: none;
   border-radius: 12px;
-  width: 40px;
-  text-align: center;
-  padding: 6px 0 6px 14px;
+  width: ${props => (props.contact === "true" ? "300px" : "40px")};
+  text-align: ${props => !props.contact && "center"};
+  padding: 6px 0 6px ${props => (props.contact ? "8px" : "14px")};
   background: rgba(255, 255, 255, 0.8);
+  font-family: "Kanit", sans-serif;
+  margin-right: 8px;
+  :focus {
+    box-shadow: 0 0 0 2pt #938fff;
+  }
 `;
 
 export const ItemSet = styled.div`
   background: rgba(0, 0, 0, 0.075);
   border-radius: 99px;
-  padding: 8px 10px;
+  padding: 6px 10px;
   margin-bottom: 12px;
+  display: flex;
+  align-items: center;
 `;
 
 export const SaveReqSet = styled.div`
   width: 75px;
-  padding: 12px 0;
+  padding: 8px 0;
   background: ${props =>
     props.save ? "#aa00ff" : props.start ? "#bfb217" : "#ff4081"};
   border-radius: 12px;
@@ -103,4 +113,9 @@ export const WrapSaveReqSet = styled.div`
 export const ErrorReqSet = styled.span`
   color: #820b0b;
   font-style: italic;
+  margin-left: 8px;
+`;
+
+export const TextReqSet = styled.span`
+  width: ${props => (props.up ? "131px" : "98px")};
 `;

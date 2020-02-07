@@ -16,6 +16,8 @@ import dayjs from "dayjs";
 import { Link } from "react-router-dom";
 
 const diaLogOpen = (
+  bookstatus,
+  expired,
   bookid,
   addBook,
   detail,
@@ -25,10 +27,8 @@ const diaLogOpen = (
   setOpen,
   change,
   setNewStatus,
-  date,
-  bookstatus
+  date
 ) => {
-
   if (admin) {
     setOpen(true);
     sessionStorage.setItem("addLog", change);
@@ -41,7 +41,7 @@ const diaLogOpen = (
       });
     }
     if (change === "detail") {
-      setMore({ assets, detail, addBook, bookid });
+      setMore({ assets, detail, addBook, bookid, expired, bookstatus });
     }
   }
 };
@@ -96,6 +96,8 @@ export const renderListBook = (
               admin={admin ? admin.toString() : "false"}
               onClick={() =>
                 diaLogOpen(
+                  book.bookstatus,
+                  book.expired,
                   book.bookid,
                   book.addBook,
                   book.detail,
@@ -105,8 +107,7 @@ export const renderListBook = (
                   setOpen,
                   "status",
                   setNewStatus,
-                  date,
-                  book.bookstatus
+                  date
                 )
               }
             >
@@ -136,6 +137,8 @@ export const renderListBook = (
               admin={admin ? admin.toString() : "false"}
               onClick={() =>
                 diaLogOpen(
+                  book.bookstatus,
+                  book.expired,
                   book.bookid,
                   book.addBook,
                   book.detail,
@@ -148,7 +151,7 @@ export const renderListBook = (
               }
             >
               <LocalOffer style={{ marginRight: 4 }} />
-              ดูข้อมูลเพิ่มเติม..
+              ข้อมูลเพิ่มเติม..
             </Item>
           )}
         </Container>

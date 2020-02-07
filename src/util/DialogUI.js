@@ -9,7 +9,10 @@ import {
 } from "@material-ui/core";
 import styled from "styled-components";
 import { changeStatus } from "../funcs/bookFuncs";
-
+import {
+  AssignmentLateOutlined,
+  AssignmentTurnedInOutlined
+} from "@material-ui/icons";
 export const SENTEMAIL = "ส่งอีเมลยืนยัน";
 export const SIGNOUT = "ออกจากระบบ";
 
@@ -58,13 +61,34 @@ const DialogUI = ({
           {title}
         </WrapTitle>
       </Title>
-
+      {/* <span style={{ display: "flex", alignItems: "center" }}>
+        <AssignmentLateOutlined style={{ marginRight: 2 }} /> รอหนังสือร้องขอ
+      </span>
+      ,
+      <span style={{ display: "flex", alignItems: "center" }}>
+        <AssignmentLateOutlined style={{ marginRight: 2 }} /> รอการยืนยัน
+      </span>
+      ,
+      <span style={{ display: "flex", alignItems: "center" }}>
+        <AssignmentTurnedInOutlined style={{ marginRight: 2 }} /> ยืนยันแล้ว
+      </span> */}
       <Content>{detail}</Content>
       <Action>
         {action && action.length > 0
           ? action.map((res, i) => (
               <Button key={i} onClick={() => chooseFuncs(res)} color="primary">
-                {res}
+                {res === "รอหนังสือร้องขอ" || res === "รอการยืนยัน" ? (
+                  <span style={{ display: "flex", alignItems: "center" }}>
+                    <AssignmentLateOutlined style={{ marginRight: 2 }} /> {res}
+                  </span>
+                ) : res === "ยืนยันแล้ว" ? (
+                  <span style={{ display: "flex", alignItems: "center" }}>
+                    <AssignmentTurnedInOutlined style={{ marginRight: 2 }} />{" "}
+                    {res}
+                  </span>
+                ) : (
+                  res
+                )}
               </Button>
             ))
           : null}

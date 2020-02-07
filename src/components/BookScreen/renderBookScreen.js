@@ -23,7 +23,9 @@ import {
   DeleteSweepOutlined,
   SaveAlt,
   Search,
-  LocationOffOutlined
+  LocationOffOutlined,
+  Call,
+  Send
 } from "@material-ui/icons";
 import { CircularProgress, Button, Grid } from "@material-ui/core";
 import dayjs from "dayjs";
@@ -54,7 +56,8 @@ import {
   ItemSet,
   SaveReqSet,
   WrapSaveReqSet,
-  ErrorReqSet
+  ErrorReqSet,
+  TextReqSet
 } from "../../styled/BookStyled";
 import { renderAllBook } from "../AllBooks/AllBookComps";
 dayjs.extend(relativeTime);
@@ -110,6 +113,11 @@ export const dialogDetailAdmin = d => {
       display: "flex",
       justifyContent: "space-between",
       marginBottom: 12
+    },
+    exp: {
+      color: "#d20000",
+      fontStyle: "italic",
+      marginTop: 12
     }
   };
 
@@ -117,10 +125,11 @@ export const dialogDetailAdmin = d => {
     <WrapContent>
       <div style={styles.top}>
         <span>
-          สร้างเมื่อ {dayjs(d.addBook).format("D MMM YYYY เวลา HH:mm น.")} (
+          ทำรายการเมื่อ {dayjs(d.addBook).format("D MMM YYYY เวลา HH:mm น.")} (
           {dayjs(d.addBook).fromNow()})
         </span>
       </div>
+
       <div style={{ marginBottom: 12 }}>
         <span style={styles.detail}>อุปกรณ์</span> :{" "}
         {d.assets ? RenderMoreAssets(d.assets, "admin") : " - "}
@@ -128,6 +137,17 @@ export const dialogDetailAdmin = d => {
       <div>
         <span style={styles.detail}>หมายเหตุ</span> :{" "}
         {d.detail ? d.detail : " - "}
+      </div>
+      <div style={styles.exp}>
+        {d.bookstatus === "รอหนังสือร้องขอ" ? (
+          <Fragment>
+            {" "}
+            การจองนี้จะหมดอายุใน{" "}
+            {dayjs(new Date(d.expired)).format("D MMM YYYY")}
+          </Fragment>
+        ) : (
+          "ไม่มีเวลาหมดอายุจนกว่าจะถึงวันที่ใช้ห้อง"
+        )}
       </div>
     </WrapContent>
   );
@@ -240,43 +260,45 @@ export const renderAdmin = d => {
         </WrapAdmin>
       );
 
-    case "ตั้งค่าคำร้อง":
+    case "ตั้งค่าแอป":
       const checkedSet =
         (d.bookPack.sentBefore !== d.reqSet.sentBefore ||
           d.bookPack.expDay !== d.reqSet.expDay) &&
         d.reqSet.sentBefore > 0 &&
         d.reqSet.expDay > 0 &&
         d.reqSet.expDay > d.reqSet.sentBefore;
-      console.log("renderBookScreen.js |checkedSet| = ", checkedSet);
       return (
         <WrapAdmin>
           <HeaderAdmin item={item} d={d} />
           <WrapAuto>
             <WrapBookSetting>
-              <BookSettingHead>กำหนดการส่งหนังสือร้องขอ</BookSettingHead>
+              <BookSettingHead>
+                <Send style={{ marginRight: 4 }} />
+                กำหนดการส่งหนังสือร้องขอ
+              </BookSettingHead>
 
               {d.bookPack.sentBefore && d.bookPack.expDay ? (
                 <WrapChooseSetting>
                   <ItemSet>
-                    อย่างเร็วสุดภายใน{" "}
+                    <TextReqSet up>อย่างเร็วสุดภายใน</TextReqSet>
                     <InputSet
                       onChange={e => d.onChangeReqSet(e, d, "sentBefore")}
                       type="number"
                       value={d.reqSet.sentBefore ? d.reqSet.sentBefore : ""}
-                    />{" "}
-                    วัน{" "}
+                    />
+                    วัน
                     {d.reqSet.sentBefore < 1 && (
                       <ErrorReqSet>*ระยะเวลาผิดพลาด</ErrorReqSet>
                     )}
                   </ItemSet>
                   <ItemSet>
-                    อย่างช้าสุดภายใน{" "}
+                    <TextReqSet up>อย่างช้าสุดภายใน</TextReqSet>
                     <InputSet
                       onChange={e => d.onChangeReqSet(e, d, "expDay")}
                       type="number"
                       value={d.reqSet.expDay ? d.reqSet.expDay : ""}
-                    />{" "}
-                    วัน{" "}
+                    />
+                    วัน
                     {d.reqSet.expDay < 1 ? (
                       <ErrorReqSet>*ระยะเวลาผิดพลาด</ErrorReqSet>
                     ) : (
@@ -306,7 +328,121 @@ export const renderAdmin = d => {
                       </SaveReqSet>
 
                       <SaveReqSet onClick={() => resetReqSet(d)}>
-                        รีเซ็ท
+                        คืนค่า
+                      </SaveReqSet>
+                      <SaveReqSet
+                        start={"true"}
+                        onClick={() => resetReqSet(d, "start")}
+                      >
+                        ค่าเริ่มต้น
+                      </SaveReqSet>
+                    </WrapSaveReqSet>
+                  )}
+                </WrapChooseSetting>
+              ) : (
+                <CircularProgress style={{ marginTop: 24, marginLeft: 24 }} />
+              )}
+            </WrapBookSetting>
+
+            <WrapBookSetting>
+              <BookSettingHead>
+                <Call style={{ marginRight: 4 }} />
+                แก้ไขการติดต่อ
+              </BookSettingHead>
+
+              {d.bookPack.sentBefore && d.bookPack.expDay ? (
+                <WrapChooseSetting>
+                  <ItemSet>
+                    <TextReqSet>ที่ตั้ง</TextReqSet>
+                    <InputSet
+                      contact={"true"}
+                      onChange={e => d.onChangeReqSet(e, d, "expDay")}
+                      type="text"
+                      value={"มหาวิทยาราชภัฏอุตรดิตถ์"}
+                    />
+                  </ItemSet>
+
+                  <ItemSet>
+                    <TextReqSet>แผนที่ที่ตั้ง</TextReqSet>
+                    <InputSet
+                      contact={"true"}
+                      onChange={e => d.onChangeReqSet(e, d, "sentBefore")}
+                      type="text"
+                      value={"https://..."}
+                    />
+                  </ItemSet>
+                  <ItemSet>
+                    <TextReqSet>สถานที่</TextReqSet>
+
+                    <InputSet
+                      contact={"true"}
+                      onChange={e => d.onChangeReqSet(e, d, "expDay")}
+                      type="text"
+                      value={"ตึก ICIT มรอ."}
+                    />
+                  </ItemSet>
+                  <ItemSet>
+                    <TextReqSet>แผนที่สถานที่</TextReqSet>
+
+                    <InputSet
+                      contact={"true"}
+                      onChange={e => d.onChangeReqSet(e, d, "expDay")}
+                      type="text"
+                      value={"https://..."}
+                    />
+                  </ItemSet>
+
+                  <ItemSet>
+                    <TextReqSet>ห้อง</TextReqSet>
+
+                    <InputSet
+                      contact={"true"}
+                      onChange={e => d.onChangeReqSet(e, d, "expDay")}
+                      type="text"
+                      value={"ศูนย์คอมพิวเตอร์"}
+                    />
+                  </ItemSet>
+
+                  <ItemSet>
+                    <TextReqSet>ที่อยู่</TextReqSet>
+
+                    <InputSet
+                      contact={"true"}
+                      onChange={e => d.onChangeReqSet(e, d, "expDay")}
+                      type="text"
+                      value={"เลขที่ 27 ถ.อินใจมี อ.เมือง จ.อุตรดิตถ์ 53000"}
+                    />
+                  </ItemSet>
+
+                  <ItemSet>
+                    <TextReqSet>โทร</TextReqSet>
+                    <InputSet
+                      contact={"true"}
+                      onChange={e => d.onChangeReqSet(e, d, "expDay")}
+                      type="text"
+                      value={"0222222222"}
+                    />
+                  </ItemSet>
+                  {d.loading ? (
+                    <div style={{ display: "flex", alignItems: "center" }}>
+                      <CircularProgress style={{ marginRight: 8 }} />
+                      กำลังบันทึก..
+                    </div>
+                  ) : (
+                    <WrapSaveReqSet>
+                      <SaveReqSet
+                        save={"true"}
+                        checked={checkedSet ? 1 : 0}
+                        onClick={
+                          checkedSet === true
+                            ? () => onReqSetUpdate(d)
+                            : undefined
+                        }
+                      >
+                        บันทึก
+                      </SaveReqSet>
+                      <SaveReqSet onClick={() => resetReqSet(d)}>
+                        คืนค่า
                       </SaveReqSet>
                       <SaveReqSet
                         start={"true"}
@@ -325,7 +461,7 @@ export const renderAdmin = d => {
         </WrapAdmin>
       );
 
-    case "ลบการจอง":
+    case "ล้างข้อมูล":
       return (
         <WrapAdmin>
           <HeaderAdmin item={item} d={d} />
@@ -346,12 +482,12 @@ export const renderAdmin = d => {
         </WrapAdmin>
       );
 
-    case "แก้ไขการติดต่อ":
-      return (
-        <WrapAdmin>
-          <HeaderAdmin item={item} d={d} />
-        </WrapAdmin>
-      );
+    // case "แก้ไขการติดต่อ":
+    //   return (
+    //     <WrapAdmin>
+    //       <HeaderAdmin item={item} d={d} />
+    //     </WrapAdmin>
+    //   );
 
     default:
       return;
@@ -384,9 +520,7 @@ const renderTabMenu = (
     if (admin) {
       setadminPage(amenu);
     }
-    if (page === "booking") {
-      setEditbook("pick");
-    }
+    setEditbook("pick");
     setPage(page);
     setHold(amenu);
   };

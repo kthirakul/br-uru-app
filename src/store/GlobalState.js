@@ -5,7 +5,7 @@ import { userFetch, fetchAll } from "../funcs/fetchFuncs";
 import { filterMyBook, filterChange } from "../funcs/AllBookFunc";
 import axios from "axios";
 import dayjs from "dayjs";
-import { getBookSetting } from "../funcs/bookFuncs";
+import { getBookSetting, oldTimeReset } from "../funcs/bookFuncs";
 
 const GlobalState = ({ children }) => {
   const initailState = {
@@ -24,7 +24,6 @@ const GlobalState = ({ children }) => {
 
   const [state, dispatch] = useReducer(reducers, initailState);
 
-  // console.log("GlobalState.js |state.bookExpired| = ", state.bookExpired);
   // datebook / roombook / timeStartBook / assetbook / notebook เอาไว้เก็บ state หน้า สร้างการจอง
   const [oldData, setOldData] = useState({
     datebook: null,
@@ -44,6 +43,11 @@ const GlobalState = ({ children }) => {
     setOldData
   };
 
+  const [editbook, setEditbook] = useState("pick");
+  const editState = {
+    editbook,
+    setEditbook
+  };
   const pickStart = `${dayjs(new Date()).format("YYYY-MM-DD")}T11:00`;
   const pickEnd = `${dayjs(new Date()).format("YYYY-MM-DD")}T13:00`;
   const [sentBefore, setsentBefore] = useState(null);
@@ -170,7 +174,8 @@ const GlobalState = ({ children }) => {
         mybookState,
         storeBooking,
         keepOldData,
-        server
+        server,
+        editState
       }}
     >
       {children}

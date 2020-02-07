@@ -40,9 +40,11 @@ const BookScreen = ({ history }) => {
     mybookState,
     firstLoad,
     storeBooking,
-    keepOldData
+    keepOldData,
+    editState
   } = context;
 
+  const { editbook, setEditbook } = editState;
   const [editLoad, seteditLoad] = useState(false);
   const [page, setPage] = useState("booking");
 
@@ -111,19 +113,22 @@ const BookScreen = ({ history }) => {
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [errors, setErrors] = useState({});
-  const [editbook, setEditbook] = useState("pick");
   const [keepBookid, setKeepBookid] = useState("");
   const [adminPage, setadminPage] = useState("จัดการการจอง");
   const [search, setSearch] = useState("");
-  const editState = {
-    editbook,
-    setEditbook
-  };
+  // const [editbook, setEditbook] = useState("pick");
+
+  // const editState = {
+  //   editbook,
+  //   setEditbook
+  // };
   const [more, setMore] = useState({
     assets: "",
     detail: "",
     addBook: "",
-    bookid: ""
+    bookid: "",
+    expired: "",
+    bookstatus: ""
   });
 
   const [newStatus, setNewStatus] = useState({

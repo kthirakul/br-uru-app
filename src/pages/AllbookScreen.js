@@ -7,10 +7,19 @@ import { DialogUI } from "../util/DialogUI";
 import WrapContainer from "../util/WrapContainer";
 import { renderAllBook } from "../components/AllBooks/AllBookComps";
 import dayjs from "dayjs";
+import { oldTimeReset } from "../funcs/bookFuncs";
 
 const AllBookScreen = ({ history }) => {
   const context = useContext(Context);
-  const { bookdata, roomdata } = context;
+  const {
+    bookdata,
+    roomdata,
+    editState,
+    keepOldData,
+    dispatch,
+    bookPack
+  } = context;
+  const { editbook, setEditbook } = editState;
 
   useEffect(() => {
     if (
@@ -26,6 +35,12 @@ const AllBookScreen = ({ history }) => {
       sessionStorage.removeItem("pathname");
     }
   }, [bookdata]);
+
+  useEffect(() => {
+    if (editbook === "edit") {
+      oldTimeReset(keepOldData, dispatch, bookdata, bookPack);
+    }
+  }, [editbook]);
 
   const countBooks = () => {
     let counts = 0;

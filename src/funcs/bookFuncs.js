@@ -536,7 +536,6 @@ export const changeStatus = (
 export const onChangeReqSet = (e, d, type) => {
   e.preventDefault();
   let value = e.target.value;
-  console.log("bookFuncs.js |value| = ", value);
   if (type === "sentBefore") {
     d.setReqSet({
       ...d.reqSet,
