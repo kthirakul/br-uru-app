@@ -74,6 +74,7 @@ export const InputSet = styled.input`
   :focus {
     box-shadow: 0 0 0 2pt #938fff;
   }
+  font-size: 16px;
 `;
 
 export const ItemSet = styled.div`
@@ -111,11 +112,17 @@ export const WrapSaveReqSet = styled.div`
 `;
 
 export const ErrorReqSet = styled.span`
-  color: #820b0b;
+  color: #c60000;
   font-style: italic;
   margin-left: 8px;
 `;
 
 export const TextReqSet = styled.span`
   width: ${props => (props.up ? "131px" : "98px")};
+`;
+
+export const SettingLoading = styled.div`
+  display: flex;
+  align-items: center;
+  flex-direction: column;
 `;

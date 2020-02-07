@@ -38,7 +38,9 @@ import {
   setBookTime,
   saveEditBook,
   resetReqSet,
-  onReqSetUpdate
+  onReqSetUpdate,
+  onUpdateContact,
+  undoContact
 } from "../../funcs/bookFuncs";
 import { emptyFunc } from "../../funcs/emptyFunc";
 import relativeTime from "dayjs/plugin/relativeTime";
@@ -57,7 +59,8 @@ import {
   SaveReqSet,
   WrapSaveReqSet,
   ErrorReqSet,
-  TextReqSet
+  TextReqSet,
+  SettingLoading
 } from "../../styled/BookStyled";
 import { renderAllBook } from "../AllBooks/AllBookComps";
 dayjs.extend(relativeTime);
@@ -276,53 +279,70 @@ export const renderAdmin = d => {
         d.reqSet.sentBefore > 0 &&
         d.reqSet.expDay > 0 &&
         d.reqSet.expDay > d.reqSet.sentBefore;
+
+      const checkedContact =
+        (d.keepContact.linkmap.trim() === d.contactdata.linkmap.trim() &&
+          d.keepContact.department.trim() === d.contactdata.department.trim() &&
+          d.keepContact.linkview.trim() === d.contactdata.linkview.trim() &&
+          d.keepContact.tell.trim() === d.contactdata.tell.trim() &&
+          d.keepContact.location.trim() === d.contactdata.location.trim() &&
+          d.keepContact.university.trim() === d.contactdata.university.trim() &&
+          d.keepContact.nameDep.trim() === d.contactdata.nameDep.trim()) ||
+        d.keepContact.linkmap.trim() === "" ||
+        d.keepContact.department.trim() === "" ||
+        d.keepContact.linkview.trim() === "" ||
+        d.keepContact.tell.trim() === "" ||
+        d.keepContact.location.trim() === "" ||
+        d.keepContact.university.trim() === "" ||
+        d.keepContact.nameDep.trim() === "";
+
       return (
         <WrapAdmin>
           <HeaderAdmin item={item} d={d} />
-          <WrapAuto>
-            <WrapBookSetting>
-              <BookSettingHead>
-                <Send style={{ marginRight: 4 }} />
-                กำหนดการส่งหนังสือร้องขอ
-              </BookSettingHead>
+          {d.loading ? (
+            <SettingLoading>
+              <CircularProgress style={{ marginTop: 24 }} />
+              <span style={{ marginTop: 18 }}>กำลังบันทึก..</span>
+            </SettingLoading>
+          ) : (
+            <WrapAuto>
+              <WrapBookSetting>
+                <BookSettingHead>
+                  <Send style={{ marginRight: 4 }} />
+                  กำหนดการส่งหนังสือร้องขอ
+                </BookSettingHead>
 
-              {d.bookPack.sentBefore && d.bookPack.expDay ? (
-                <WrapChooseSetting>
-                  <ItemSet>
-                    <TextReqSet up>อย่างเร็วสุดภายใน</TextReqSet>
-                    <InputSet
-                      onChange={e => d.onChangeReqSet(e, d, "sentBefore")}
-                      type="number"
-                      value={d.reqSet.sentBefore ? d.reqSet.sentBefore : ""}
-                    />
-                    วัน
-                    {d.reqSet.sentBefore < 1 && (
-                      <ErrorReqSet>*ระยะเวลาผิดพลาด</ErrorReqSet>
-                    )}
-                  </ItemSet>
-                  <ItemSet>
-                    <TextReqSet up>อย่างช้าสุดภายใน</TextReqSet>
-                    <InputSet
-                      onChange={e => d.onChangeReqSet(e, d, "expDay")}
-                      type="number"
-                      value={d.reqSet.expDay ? d.reqSet.expDay : ""}
-                    />
-                    วัน
-                    {d.reqSet.expDay < 1 ? (
-                      <ErrorReqSet>*ระยะเวลาผิดพลาด</ErrorReqSet>
-                    ) : (
-                      d.reqSet.expDay <= d.reqSet.sentBefore && (
-                        <ErrorReqSet>*ต้องมากกว่าเวลาเร็วสุด</ErrorReqSet>
-                      )
-                    )}
-                  </ItemSet>
+                {d.bookPack.sentBefore && d.bookPack.expDay ? (
+                  <WrapChooseSetting>
+                    <ItemSet>
+                      <TextReqSet up>อย่างเร็วสุดภายใน</TextReqSet>
+                      <InputSet
+                        onChange={e => d.onChangeReqSet(e, d, "sentBefore")}
+                        type="number"
+                        value={d.reqSet.sentBefore ? d.reqSet.sentBefore : ""}
+                      />
+                      วัน
+                      {d.reqSet.sentBefore < 1 && (
+                        <ErrorReqSet>*ระยะเวลาผิดพลาด</ErrorReqSet>
+                      )}
+                    </ItemSet>
+                    <ItemSet>
+                      <TextReqSet up>อย่างช้าสุดภายใน</TextReqSet>
+                      <InputSet
+                        onChange={e => d.onChangeReqSet(e, d, "expDay")}
+                        type="number"
+                        value={d.reqSet.expDay ? d.reqSet.expDay : ""}
+                      />
+                      วัน
+                      {d.reqSet.expDay < 1 ? (
+                        <ErrorReqSet>*ระยะเวลาผิดพลาด</ErrorReqSet>
+                      ) : (
+                        d.reqSet.expDay <= d.reqSet.sentBefore && (
+                          <ErrorReqSet>*ต้องมากกว่าเวลาเร็วสุด</ErrorReqSet>
+                        )
+                      )}
+                    </ItemSet>
 
-                  {d.loading ? (
-                    <div style={{ display: "flex", alignItems: "center" }}>
-                      <CircularProgress style={{ marginRight: 8 }} />
-                      กำลังบันทึก..
-                    </div>
-                  ) : (
                     <WrapSaveReqSet>
                       <SaveReqSet
                         save={"true"}
@@ -346,127 +366,139 @@ export const renderAdmin = d => {
                         ค่าเริ่มต้น
                       </SaveReqSet>
                     </WrapSaveReqSet>
-                  )}
-                </WrapChooseSetting>
-              ) : (
-                <CircularProgress style={{ marginTop: 24, marginLeft: 24 }} />
-              )}
-            </WrapBookSetting>
+                  </WrapChooseSetting>
+                ) : (
+                  <CircularProgress style={{ marginTop: 24, marginLeft: 24 }} />
+                )}
+              </WrapBookSetting>
 
-            <WrapBookSetting>
-              <BookSettingHead>
-                <Call style={{ marginRight: 4 }} />
-                แก้ไขการติดต่อ
-              </BookSettingHead>
+              <WrapBookSetting>
+                <BookSettingHead>
+                  <Call style={{ marginRight: 4 }} />
+                  แก้ไขการติดต่อ
+                </BookSettingHead>
 
-              {d.bookPack.sentBefore && d.bookPack.expDay ? (
-                <WrapChooseSetting>
-                  <ItemSet>
-                    <TextReqSet>ที่ตั้ง</TextReqSet>
-                    <InputSet
-                      contact={"true"}
-                      onChange={e => d.onChangeContact(e, d, "university")}
-                      type="text"
-                      value={university}
-                    />
-                  </ItemSet>
+                {d.bookPack.sentBefore && d.bookPack.expDay ? (
+                  <WrapChooseSetting>
+                    <ItemSet>
+                      <TextReqSet>ที่ตั้ง</TextReqSet>
+                      <InputSet
+                        contact={"true"}
+                        onChange={e => d.onChangeContact(e, d, "university")}
+                        type="text"
+                        value={university}
+                      />
+                      {d.keepContact.university.trim() === "" && (
+                        <ErrorReqSet>*กรุณาใส่ข้อมูลที่ตั้ง</ErrorReqSet>
+                      )}
+                    </ItemSet>
 
-                  <ItemSet>
-                    <TextReqSet>แผนที่ที่ตั้ง</TextReqSet>
-                    <InputSet
-                      contact={"true"}
-                      onChange={e => d.onChangeContact(e, d, "linkmap")}
-                      type="text"
-                      value={linkmap}
-                    />
-                  </ItemSet>
-                  <ItemSet>
-                    <TextReqSet>สถานที่</TextReqSet>
+                    <ItemSet>
+                      <TextReqSet>แผนที่ที่ตั้ง</TextReqSet>
+                      <InputSet
+                        contact={"true"}
+                        onChange={e => d.onChangeContact(e, d, "linkmap")}
+                        type="text"
+                        value={linkmap}
+                      />
+                      {d.keepContact.linkmap.trim() === "" && (
+                        <ErrorReqSet>*กรุณาใส่ข้อมูลแผนที่ที่ตั้ง</ErrorReqSet>
+                      )}
+                    </ItemSet>
 
-                    <InputSet
-                      contact={"true"}
-                      onChange={e => d.onChangeContact(e, d, "department")}
-                      type="text"
-                      value={department}
-                    />
-                  </ItemSet>
-                  <ItemSet>
-                    <TextReqSet>แผนที่สถานที่</TextReqSet>
+                    <ItemSet>
+                      <TextReqSet>สถานที่</TextReqSet>
+                      <InputSet
+                        contact={"true"}
+                        onChange={e => d.onChangeContact(e, d, "department")}
+                        type="text"
+                        value={department}
+                      />
+                      {d.keepContact.department.trim() === "" && (
+                        <ErrorReqSet>*กรุณาใส่ข้อมูลสถานที่</ErrorReqSet>
+                      )}
+                    </ItemSet>
 
-                    <InputSet
-                      contact={"true"}
-                      onChange={e => d.onChangeContact(e, d, "linkview")}
-                      type="text"
-                      value={linkview}
-                    />
-                  </ItemSet>
+                    <ItemSet>
+                      <TextReqSet>แผนที่สถานที่</TextReqSet>
+                      <InputSet
+                        contact={"true"}
+                        onChange={e => d.onChangeContact(e, d, "linkview")}
+                        type="text"
+                        value={linkview}
+                      />
+                      {d.keepContact.linkview.trim() === "" && (
+                        <ErrorReqSet>*กรุณาใส่ข้อมูลแผนที่สถานที่</ErrorReqSet>
+                      )}
+                    </ItemSet>
 
-                  <ItemSet>
-                    <TextReqSet>ห้อง</TextReqSet>
+                    <ItemSet>
+                      <TextReqSet>ห้อง</TextReqSet>
+                      <InputSet
+                        contact={"true"}
+                        onChange={e => d.onChangeContact(e, d, "nameDep")}
+                        type="text"
+                        value={nameDep}
+                      />
+                      {d.keepContact.nameDep.trim() === "" && (
+                        <ErrorReqSet>*กรุณาใส่ข้อมูลห้อง</ErrorReqSet>
+                      )}
+                    </ItemSet>
 
-                    <InputSet
-                      contact={"true"}
-                      onChange={e => d.onChangeContact(e, d, "nameDep")}
-                      type="text"
-                      value={nameDep}
-                    />
-                  </ItemSet>
+                    <ItemSet>
+                      <TextReqSet>ที่อยู่</TextReqSet>
 
-                  <ItemSet>
-                    <TextReqSet>ที่อยู่</TextReqSet>
+                      <InputSet
+                        contact={"true"}
+                        onChange={e => d.onChangeContact(e, d, "location")}
+                        type="text"
+                        value={location}
+                      />
+                      {d.keepContact.location.trim() === "" && (
+                        <ErrorReqSet>*กรุณาใส่ข้อมูลที่อยู่</ErrorReqSet>
+                      )}
+                    </ItemSet>
 
-                    <InputSet
-                      contact={"true"}
-                      onChange={e => d.onChangeContact(e, d, "location")}
-                      type="text"
-                      value={location}
-                    />
-                  </ItemSet>
+                    <ItemSet>
+                      <TextReqSet>โทร</TextReqSet>
+                      <InputSet
+                        contact={"true"}
+                        onChange={e => d.onChangeContact(e, d, "tell")}
+                        type="text"
+                        value={tell}
+                      />
+                      {d.keepContact.tell.trim() === "" && (
+                        <ErrorReqSet>*กรุณาใส่ข้อมูลโทร</ErrorReqSet>
+                      )}
+                    </ItemSet>
 
-                  <ItemSet>
-                    <TextReqSet>โทร</TextReqSet>
-                    <InputSet
-                      contact={"true"}
-                      onChange={e => d.onChangeContact(e, d, "tell")}
-                      type="text"
-                      value={tell}
-                    />
-                  </ItemSet>
-                  {d.loading ? (
-                    <div style={{ display: "flex", alignItems: "center" }}>
-                      <CircularProgress style={{ marginRight: 8 }} />
-                      กำลังบันทึก..
-                    </div>
-                  ) : (
                     <WrapSaveReqSet>
                       <SaveReqSet
                         save={"true"}
-                        checked={checkedSet ? 1 : 0}
+                        checked={checkedContact ? 0 : 1}
                         onClick={
-                          checkedSet === true
-                            ? () => onReqSetUpdate(d)
-                            : undefined
+                          !checkedContact ? () => onUpdateContact(d) : undefined
                         }
                       >
                         บันทึก
                       </SaveReqSet>
-                      <SaveReqSet onClick={() => resetReqSet(d)}>
+                      <SaveReqSet onClick={() => undoContact(d)}>
                         คืนค่า
                       </SaveReqSet>
                       <SaveReqSet
                         start={"true"}
-                        onClick={() => resetReqSet(d, "start")}
+                        onClick={() => undoContact(d, "start")}
                       >
                         ค่าเริ่มต้น
                       </SaveReqSet>
                     </WrapSaveReqSet>
-                  )}
-                </WrapChooseSetting>
-              ) : (
-                <CircularProgress style={{ marginTop: 24, marginLeft: 24 }} />
-              )}
-            </WrapBookSetting>
-          </WrapAuto>
+                  </WrapChooseSetting>
+                ) : (
+                  <CircularProgress style={{ marginTop: 24, marginLeft: 24 }} />
+                )}
+              </WrapBookSetting>
+            </WrapAuto>
+          )}
         </WrapAdmin>
       );
 

@@ -333,7 +333,11 @@ const BookScreen = ({ history }) => {
                     keepContact,
                     onChangeContact,
                     setkeepContact,
-                    contactdata
+                    contactdata,
+                    dispatch,
+                    history,
+                    setPage,
+                    setHold
                   })}
             </WrapInList>
           </WrapListBook>

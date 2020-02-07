@@ -1,4 +1,4 @@
-import { EDIT_BOOK_TIME } from "../store/reducers";
+import { EDIT_BOOK_TIME, FETCH_CONTACT } from "../store/reducers";
 
 import axios from "axios";
 import dayjs from "dayjs";
@@ -572,6 +572,8 @@ export const onReqSetUpdate = d => {
       getBookSetting(d.bookPack);
     })
     .then(() => {
+      d.setPage("booking");
+      d.setHold("สร้างการจอง");
       d.setLoading(false);
     })
     .catch(() => {
@@ -588,4 +590,62 @@ export const onChangeContact = (e, d, status) => {
     ...d.keepContact,
     [status]: e.target.value
   });
+};
+
+export const onUpdateContact = d => {
+  d.setLoading(true);
+  axios
+    .put("contact", d.keepContact)
+    .then(() => {
+      axios
+        .get("contact")
+        .then(res => {
+          d.dispatch({
+            type: FETCH_CONTACT,
+            payload: res.data
+          });
+        })
+        .then(() => {
+          d.history.push("/contact");
+          d.setLoading(false);
+        })
+        .catch(() => {
+          if (window.location.pathname !== "/error") {
+            localStorage.removeItem("mybook");
+            window.location.href = "/error";
+          }
+        });
+    })
+    .catch(() => {
+      if (window.location.pathname !== "/error") {
+        localStorage.removeItem("mybook");
+        window.location.href = "/error";
+      }
+    });
+};
+
+export const undoContact = (d, status) => {
+  if (status === "start") {
+    d.setkeepContact({
+      linkmap:
+        "https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d7604.672265552105!2d100.09258000000001!3d17.634232!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0xf0346c6d9b33160!2sUttaradit%20Rajabhat%20University!5e0!3m2!1sen!2sth!4v1575611452703!5m2!1sen!2sth",
+      department: "ตึก ICIT มรอ.",
+      linkview:
+        "https://www.google.co.th/maps/dir/Uttaradit+Rajabhat+University,+%E0%B8%95%E0%B8%B3%E0%B8%9A%E0%B8%A5+%E0%B8%97%E0%B9%88%E0%B8%B2%E0%B8%AD%E0%B8%B4%E0%B8%90+%E0%B9%80%E0%B8%A1%E0%B8%B7%E0%B8%AD%E0%B8%87+%E0%B8%AD%E0%B8%B8%E0%B8%95%E0%B8%A3%E0%B8%94%E0%B8%B4%E0%B8%95%E0%B8%96%E0%B9%8C/%E0%B8%95%E0%B8%B6%E0%B8%81+ICIT+%E0%B8%A1%E0%B8%AB%E0%B8%B2%E0%B8%A7%E0%B8%B4%E0%B8%97%E0%B8%A2%E0%B8%B2%E0%B8%A5%E0%B8%B1%E0%B8%A2%E0%B8%A3%E0%B8%B2%E0%B8%8A%E0%B8%A0%E0%B8%B1%E0%B8%8F%E0%B8%AD%E0%B8%B8%E0%B8%95%E0%B8%A3%E0%B8%94%E0%B8%B4%E0%B8%95%E0%B8%96%E0%B9%8C+%E0%B8%95%E0%B8%B3%E0%B8%9A%E0%B8%A5+%E0%B8%97%E0%B9%88%E0%B8%B2%E0%B8%AD%E0%B8%B4%E0%B8%90+%E0%B8%AD%E0%B8%B3%E0%B9%80%E0%B8%A0%E0%B8%AD%E0%B9%80%E0%B8%A1%E0%B8%B7%E0%B8%AD%E0%B8%87%E0%B8%AD%E0%B8%B8%E0%B8%95%E0%B8%A3%E0%B8%94%E0%B8%B4%E0%B8%95%E0%B8%96%E0%B9%8C+%E0%B8%AD%E0%B8%B8%E0%B8%95%E0%B8%A3%E0%B8%94%E0%B8%B4%E0%B8%95%E0%B8%96%E0%B9%8C+53000/@17.6338715,100.0926317,17z/data=!4m13!4m12!1m5!1m1!1s0x30df303aeba49521:0xf0346c6d9b33160!2m2!1d100.0935269!2d17.6334887!1m5!1m1!1s0x30df303ab1a0c283:0x4834dc46d6b10c62!2m2!1d100.092378!2d17.6334228?hl=th",
+      location: "เลขที่ 27 ถ.อินใจมี อ.เมือง จ.อุตรดิตถ์ 53000",
+      nameDep: "ศูนย์คอมพิวเตอร์",
+      tell: "0222222222",
+      university: "มหาวิทยาราชภัฏอุตรดิตถ์"
+    });
+  } else {
+    d.setkeepContact({
+      linkmap: d.contactdata.linkmap,
+      department: d.contactdata.department,
+      linkview: d.contactdata.linkview,
+      location: d.contactdata.location,
+      nameDep: d.contactdata.nameDep,
+      tell: d.contactdata.tell,
+      university: d.contactdata.university
+    });
+  }
 };

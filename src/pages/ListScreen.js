@@ -81,16 +81,18 @@ const ListScreen = ({ history }) => {
       Object.keys(bookdata).length > 0
     ) {
       setOnBook("loading");
-      const findbook = bookdata[datebook].find(res => res.bookid === bookid);
-      if (pathname === bookid && findbook) {
-        setkeepMyBook(findbook);
-        setTimeout(() => {
-          setOnBook("finish");
-        }, 1000);
-      } else {
-        history.push("/books");
-
-        setOnBook("default");
+      console.log("ListScreen.js |bookdata[datebook]| = ", bookdata[datebook]);
+      if (bookdata[datebook]) {
+        const findbook = bookdata[datebook].find(res => res.bookid === bookid);
+        if (pathname === bookid && findbook) {
+          setkeepMyBook(findbook);
+          setTimeout(() => {
+            setOnBook("finish");
+          }, 1000);
+        } else {
+          history.push("/books");
+          setOnBook("default");
+        }
       }
     }
   }, [bookdata]);
