@@ -53,6 +53,7 @@ const BookScreen = ({ history }) => {
     sentBefore: 0,
     expDay: 0
   });
+  const admin = userData.email === "br.uru.app@gmail.com" ? true : false;
 
   useEffect(() => {
     setHold("สร้างการจอง");
@@ -137,10 +138,9 @@ const BookScreen = ({ history }) => {
     bookid: ""
   });
 
-  const admin = userData.email === "br.uru.app@gmail.com" ? true : false;
-
   useEffect(() => {
-    if (editbook === "pick" && bookPack.roombook) {
+    if ((editbook === "pick" && bookPack.roombook) || hold === "") {
+      console.log("Step: ", 1);
       oldTimeReset(keepOldData, dispatch, bookdata, bookPack);
     }
   }, [editbook]);

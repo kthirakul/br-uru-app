@@ -1,4 +1,4 @@
-import React, { useContext, Fragment, useState } from "react";
+import React, { useContext, Fragment, useState, useEffect } from "react";
 import dayjs from "dayjs";
 import Context from "../store/Context";
 import styled from "styled-components";
@@ -23,17 +23,33 @@ import WrapContainer from "../util/WrapContainer";
 import { Grid } from "@material-ui/core";
 
 import relativeTime from "dayjs/plugin/relativeTime";
+import { oldTimeReset } from "../funcs/bookFuncs";
 dayjs.extend(relativeTime);
 
 const DatePick = ({ location, history }) => {
   const context = useContext(Context);
   const [loading, setloading] = useState(false);
 
+  const {
+    roomdata,
+    bookPack,
+    keepOldData,
+    dispatch,
+    bookdata,
+    editState
+  } = context;
+  const { editbook, setEditbook } = editState;
+
+  // useEffect(() => {
+  //   if (editbook === "pick" && bookPack.roombook) {
+  //     oldTimeReset(keepOldData, dispatch, bookdata, bookPack);
+  //   }
+  // }, [editbook]);
+
   if (!location.state) {
     sessionStorage.setItem("pathname", location.pathname);
     window.location.href = "/allbooks";
   } else {
-    const { roomdata, bookPack } = context;
     const {
       state: { data, date }
     } = location;
@@ -60,7 +76,12 @@ const DatePick = ({ location, history }) => {
             </Item>
             <Item status={res.bookstatus} item xs={3}>
               <WatchLater style={{ marginRight: 4 }} />
-              {showTime(res.timeStart, res.timeEnd)}
+              {keepOldData.oldData.timeStart
+                ? showTime(
+                    keepOldData.oldData.timeStart,
+                    keepOldData.oldData.timeEnd
+                  )
+                : showTime(res.timeStart, res.timeEnd)}
             </Item>
 
             <Item status={res.bookstatus} item xs={3}>
