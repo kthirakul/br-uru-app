@@ -565,6 +565,20 @@ export const resetReqSet = (d, start) => {
   }
 };
 
-export const onReqSetUpdate = () => {
-  console.log('bookFuncs.js |"setUpdate"| = ', "setUpdate");
+export const onReqSetUpdate = d => {
+  d.setLoading(true);
+  axios
+    .put("/period", d.reqSet)
+    .then(() => {
+      getBookSetting(d.bookPack);
+    })
+    .then(() => {
+      d.setLoading(false);
+    })
+    .catch(() => {
+      if (window.location.pathname !== "/error") {
+        localStorage.removeItem("mybook");
+        window.location.href = "/error";
+      }
+    });
 };

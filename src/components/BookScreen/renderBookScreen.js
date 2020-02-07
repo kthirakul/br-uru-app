@@ -286,27 +286,36 @@ export const renderAdmin = d => {
                     )}
                   </ItemSet>
 
-                  <WrapSaveReqSet>
-                    <SaveReqSet
-                      save={"true"}
-                      checked={checkedSet ? 1 : 0}
-                      onClick={
-                        checkedSet === true ? () => onReqSetUpdate() : undefined
-                      }
-                    >
-                      บันทึก
-                    </SaveReqSet>
+                  {d.loading ? (
+                    <div style={{ display: "flex", alignItems: "center" }}>
+                      <CircularProgress style={{ marginRight: 8 }} />
+                      กำลังบันทึก..
+                    </div>
+                  ) : (
+                    <WrapSaveReqSet>
+                      <SaveReqSet
+                        save={"true"}
+                        checked={checkedSet ? 1 : 0}
+                        onClick={
+                          checkedSet === true
+                            ? () => onReqSetUpdate(d)
+                            : undefined
+                        }
+                      >
+                        บันทึก
+                      </SaveReqSet>
 
-                    <SaveReqSet onClick={() => resetReqSet(d)}>
-                      รีเซ็ท
-                    </SaveReqSet>
-                    <SaveReqSet
-                      start={"true"}
-                      onClick={() => resetReqSet(d, "start")}
-                    >
-                      ค่าเริ่มต้น
-                    </SaveReqSet>
-                  </WrapSaveReqSet>
+                      <SaveReqSet onClick={() => resetReqSet(d)}>
+                        รีเซ็ท
+                      </SaveReqSet>
+                      <SaveReqSet
+                        start={"true"}
+                        onClick={() => resetReqSet(d, "start")}
+                      >
+                        ค่าเริ่มต้น
+                      </SaveReqSet>
+                    </WrapSaveReqSet>
+                  )}
                 </WrapChooseSetting>
               ) : (
                 <CircularProgress style={{ marginTop: 24, marginLeft: 24 }} />
