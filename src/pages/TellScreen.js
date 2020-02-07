@@ -67,7 +67,7 @@ const TellScreen = () => {
             <Item item xs={4}>
               <ContactPhone style={{ marginRight: 6 }} />
 
-              {tell}
+              โทร {tell}
               <TellCom>({nameDep})</TellCom>
             </Item>
           </WrapItem>

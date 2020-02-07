@@ -205,6 +205,15 @@ export const renderAdmin = d => {
   let filterBook = {};
   let newBook = {};
   let bookArr = [];
+  const {
+    linkmap,
+    department,
+    linkview,
+    nameDep,
+    tell,
+    location,
+    university
+  } = d.keepContact;
   Object.entries(d.bookdata).forEach((books, i) => {
     books[1].forEach(res => {
       if (
@@ -356,9 +365,9 @@ export const renderAdmin = d => {
                     <TextReqSet>ที่ตั้ง</TextReqSet>
                     <InputSet
                       contact={"true"}
-                      onChange={e => d.onChangeReqSet(e, d, "expDay")}
+                      onChange={e => d.onChangeContact(e, d, "university")}
                       type="text"
-                      value={"มหาวิทยาราชภัฏอุตรดิตถ์"}
+                      value={university}
                     />
                   </ItemSet>
 
@@ -366,9 +375,9 @@ export const renderAdmin = d => {
                     <TextReqSet>แผนที่ที่ตั้ง</TextReqSet>
                     <InputSet
                       contact={"true"}
-                      onChange={e => d.onChangeReqSet(e, d, "sentBefore")}
+                      onChange={e => d.onChangeContact(e, d, "linkmap")}
                       type="text"
-                      value={"https://..."}
+                      value={linkmap}
                     />
                   </ItemSet>
                   <ItemSet>
@@ -376,9 +385,9 @@ export const renderAdmin = d => {
 
                     <InputSet
                       contact={"true"}
-                      onChange={e => d.onChangeReqSet(e, d, "expDay")}
+                      onChange={e => d.onChangeContact(e, d, "department")}
                       type="text"
-                      value={"ตึก ICIT มรอ."}
+                      value={department}
                     />
                   </ItemSet>
                   <ItemSet>
@@ -386,9 +395,9 @@ export const renderAdmin = d => {
 
                     <InputSet
                       contact={"true"}
-                      onChange={e => d.onChangeReqSet(e, d, "expDay")}
+                      onChange={e => d.onChangeContact(e, d, "linkview")}
                       type="text"
-                      value={"https://..."}
+                      value={linkview}
                     />
                   </ItemSet>
 
@@ -397,9 +406,9 @@ export const renderAdmin = d => {
 
                     <InputSet
                       contact={"true"}
-                      onChange={e => d.onChangeReqSet(e, d, "expDay")}
+                      onChange={e => d.onChangeContact(e, d, "nameDep")}
                       type="text"
-                      value={"ศูนย์คอมพิวเตอร์"}
+                      value={nameDep}
                     />
                   </ItemSet>
 
@@ -408,9 +417,9 @@ export const renderAdmin = d => {
 
                     <InputSet
                       contact={"true"}
-                      onChange={e => d.onChangeReqSet(e, d, "expDay")}
+                      onChange={e => d.onChangeContact(e, d, "location")}
                       type="text"
-                      value={"เลขที่ 27 ถ.อินใจมี อ.เมือง จ.อุตรดิตถ์ 53000"}
+                      value={location}
                     />
                   </ItemSet>
 
@@ -418,9 +427,9 @@ export const renderAdmin = d => {
                     <TextReqSet>โทร</TextReqSet>
                     <InputSet
                       contact={"true"}
-                      onChange={e => d.onChangeReqSet(e, d, "expDay")}
+                      onChange={e => d.onChangeContact(e, d, "tell")}
                       type="text"
-                      value={"0222222222"}
+                      value={tell}
                     />
                   </ItemSet>
                   {d.loading ? (

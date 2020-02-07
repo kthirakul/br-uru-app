@@ -27,7 +27,12 @@ import {
   dialogChangeStatus,
   dialogDetailAdmin
 } from "../components/BookScreen/renderBookScreen";
-import { oldTimeReset, removeBook, onChangeReqSet } from "../funcs/bookFuncs";
+import {
+  oldTimeReset,
+  removeBook,
+  onChangeReqSet,
+  onChangeContact
+} from "../funcs/bookFuncs";
 
 const BookScreen = ({ history }) => {
   const context = useContext(Context);
@@ -41,8 +46,41 @@ const BookScreen = ({ history }) => {
     firstLoad,
     storeBooking,
     keepOldData,
-    editState
+    editState,
+    contactdata
   } = context;
+
+  const {
+    linkmap,
+    department,
+    linkview,
+    nameDep,
+    tell,
+    location,
+    university
+  } = contactdata;
+
+  const [keepContact, setkeepContact] = useState({
+    linkmap: "",
+    department: "",
+    linkview: "",
+    nameDep: "",
+    tell: "",
+    location: "",
+    university: ""
+  });
+
+  useEffect(() => {
+    setkeepContact({
+      linkmap,
+      department,
+      linkview,
+      nameDep,
+      tell,
+      location,
+      university
+    });
+  }, [contactdata]);
 
   const { editbook, setEditbook } = editState;
   const [editLoad, seteditLoad] = useState(false);
@@ -291,7 +329,11 @@ const BookScreen = ({ history }) => {
                     reqSet,
                     setReqSet,
                     onChangeReqSet,
-                    bookPack
+                    bookPack,
+                    keepContact,
+                    onChangeContact,
+                    setkeepContact,
+                    contactdata
                   })}
             </WrapInList>
           </WrapListBook>

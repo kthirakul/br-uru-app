@@ -67,7 +67,7 @@ export const InputSet = styled.input`
   border-radius: 12px;
   width: ${props => (props.contact === "true" ? "300px" : "40px")};
   text-align: ${props => !props.contact && "center"};
-  padding: 6px 0 6px ${props => (props.contact ? "8px" : "14px")};
+  padding: ${props => (props.contact ? "6px 14px" : "6px 0 6px 14px")};
   background: rgba(255, 255, 255, 0.8);
   font-family: "Kanit", sans-serif;
   margin-right: 8px;

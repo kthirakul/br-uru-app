@@ -581,3 +581,11 @@ export const onReqSetUpdate = d => {
       }
     });
 };
+
+export const onChangeContact = (e, d, status) => {
+  e.preventDefault();
+  d.setkeepContact({
+    ...d.keepContact,
+    [status]: e.target.value
+  });
+};
