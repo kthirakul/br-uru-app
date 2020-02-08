@@ -1142,8 +1142,7 @@ const renderListBook = (
       if (bookPack.createPage === "create") {
         setLoading(true);
         if (
-          errorBook &&
-          Object.keys(errorBook).length > 0 &&
+          (errorBook && Object.keys(errorBook).length > 0) ||
           bookPack.datebook === "Invalid Date"
         ) {
           return setLoading(false);
