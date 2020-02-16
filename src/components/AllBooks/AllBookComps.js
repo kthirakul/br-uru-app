@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { Fragment } from 'react'
 import {
   AccountBox,
   WatchLater,
@@ -7,13 +7,14 @@ import {
   Bookmark,
   DateRange,
   BrandingWatermark,
-  LocalOffer
-} from "@material-ui/icons";
-import { Grid, CircularProgress } from "@material-ui/core";
-import { findRoom, showTime } from "../../funcs/roomFuncs";
-import styled from "styled-components";
-import dayjs from "dayjs";
-import { Link } from "react-router-dom";
+  LocalOffer,
+  Backspace
+} from '@material-ui/icons'
+import { Grid, CircularProgress } from '@material-ui/core'
+import { findRoom, showTime } from '../../funcs/roomFuncs'
+import styled from 'styled-components'
+import dayjs from 'dayjs'
+import { Link } from 'react-router-dom'
 
 const diaLogOpen = (
   bookstatus,
@@ -30,21 +31,28 @@ const diaLogOpen = (
   date
 ) => {
   if (admin) {
-    setOpen(true);
-    sessionStorage.setItem("addLog", change);
-    sessionStorage.setItem("oldStatus", bookstatus);
-    if (change === "status") {
+    setOpen(true)
+    sessionStorage.setItem('addLog', change)
+    sessionStorage.setItem('oldStatus', bookstatus)
+    if (change === 'status') {
       setNewStatus({
-        mouth: dayjs(new Date(date)).format("YYYY,MM"),
+        mouth: dayjs(new Date(date)).format('YYYY,MM'),
         date,
         bookid
-      });
+      })
     }
-    if (change === "detail") {
-      setMore({ assets, detail, addBook, bookid, expired, bookstatus });
+    if (change === 'detail') {
+      setMore({ assets, detail, addBook, bookid, expired, bookstatus, date })
+    }
+    if (change === 'delete') {
+      setNewStatus({
+        mouth: dayjs(new Date(date)).format('YYYY,MM'),
+        date,
+        bookid
+      })
     }
   }
-};
+}
 
 export const renderListBook = (
   bookdata,
@@ -55,14 +63,15 @@ export const renderListBook = (
   setNewStatus,
   newStatus,
   loading,
-  setMore
+  setMore,
+  status
 ) => {
   return Object.values(bookdata[date]).map((book, ibook) => {
-    const XS = admin ? 2 : 3;
+    const XS = admin ? 2 : 3
     return (
       <WrapOutside key={book.bookid}>
         {ibook !== 0 ? null : <Hr />}
-        <Container container admin={admin ? admin.toString() : "false"}>
+        <Container container admin={admin ? admin.toString() : 'false'}>
           {admin && (
             <Item status={book.bookstatus} item xs={XS}>
               <BrandingWatermark style={{ marginRight: 4 }} />
@@ -93,39 +102,69 @@ export const renderListBook = (
               status={book.bookstatus}
               item
               xs={XS}
-              admin={admin ? admin.toString() : "false"}
+              admin={admin ? admin.toString() : 'false'}
               onClick={() =>
-                diaLogOpen(
-                  book.bookstatus,
-                  book.expired,
-                  book.bookid,
-                  book.addBook,
-                  book.detail,
-                  book.assets,
-                  setMore,
-                  admin,
-                  setOpen,
-                  "status",
-                  setNewStatus,
-                  date
-                )
+                loading
+                  ? null
+                  : status === 'del'
+                  ? diaLogOpen(
+                      book.bookstatus,
+                      book.expired,
+                      book.bookid,
+                      book.addBook,
+                      book.detail,
+                      book.assets,
+                      setMore,
+                      admin,
+                      setOpen,
+                      'delete',
+                      setNewStatus,
+                      date
+                    )
+                  : diaLogOpen(
+                      book.bookstatus,
+                      book.expired,
+                      book.bookid,
+                      book.addBook,
+                      book.detail,
+                      book.assets,
+                      setMore,
+                      admin,
+                      setOpen,
+                      'status',
+                      setNewStatus,
+                      date
+                    )
               }
             >
-              {book.bookstatus === "รอการยืนยัน" ||
-              book.bookstatus === "รอหนังสือร้องขอ" ? (
-                <AssignmentLateRounded
-                  style={{
-                    marginRight: 4
-                  }}
-                />
+              {status === 'del' ? (
+                <Fragment>
+                  <Backspace
+                    style={{
+                      marginRight: 4
+                    }}
+                  />
+                  ลบการจองนี้
+                </Fragment>
               ) : (
-                <AssignmentTurnedIn
-                  style={{
-                    marginRight: 4
-                  }}
-                />
+                <Fragment>
+                  {book.bookstatus === 'รอการยืนยัน' ||
+                  book.bookstatus === 'รอหนังสือร้องขอ' ? (
+                    <AssignmentLateRounded
+                      style={{
+                        marginRight: 4
+                      }}
+                    />
+                  ) : (
+                    <AssignmentTurnedIn
+                      style={{
+                        marginRight: 4
+                      }}
+                    />
+                  )}
+                  {book.bookstatus}
+                </Fragment>
               )}
-              {book.bookstatus}
             </Item>
           )}
 
@@ -134,7 +173,7 @@ export const renderListBook = (
               status={book.bookstatus}
               item
               xs={XS}
-              admin={admin ? admin.toString() : "false"}
+              admin={admin ? admin.toString() : 'false'}
               onClick={() =>
                 diaLogOpen(
                   book.bookstatus,
@@ -146,7 +185,7 @@ export const renderListBook = (
                   setMore,
                   admin,
                   setOpen,
-                  "detail"
+                  'detail'
                 )
               }
             >
@@ -158,15 +197,15 @@ export const renderListBook = (
 
         <Hr />
       </WrapOutside>
-    );
-  });
-};
+    )
+  })
+}
 
 const Hr = styled.hr`
   margin: 0;
   border-top: 1px solid rgba(255, 255, 255, 0.5);
   border-bottom: 1px solid rgba(0, 0, 0, 0.35);
-`;
+`
 
 const WrapOutside = styled.div`
   cursor: default;
@@ -174,28 +213,28 @@ const WrapOutside = styled.div`
   :hover {
     background: rgba(255, 255, 255, 0.4);
   }
-`;
+`
 const Container = styled(Grid)`
   margin-bottom: 4px;
   padding: 18px 0;
-  font-size: ${props => (props.admin === "true" ? "14px" : "16px")};
-`;
+  font-size: ${props => (props.admin === 'true' ? '14px' : '16px')};
+`
 
 const Item = styled(Grid)`
-  cursor: ${props => (props.admin === "true" ? "pointer" : "default")};
+  cursor: ${props => (props.admin === 'true' ? 'pointer' : 'default')};
   display: flex;
   align-items: center;
   padding: 0 12px;
   color: ${props =>
-    props.admin === "true"
-      ? "blue"
-      : props.status === "รอการยืนยัน" || props.status === "รอหนังสือร้องขอ"
-      ? "black"
-      : props.status === "ยืนยันแล้ว" && "#274de8"};
+    props.admin === 'true'
+      ? 'blue'
+      : props.status === 'รอการยืนยัน' || props.status === 'รอหนังสือร้องขอ'
+      ? 'black'
+      : props.status === 'ยืนยันแล้ว' && '#274de8'};
   :hover {
-    color: ${props => props.admin === "true" && "red"};
+    color: ${props => props.admin === 'true' && 'red'};
   }
-`;
+`
 
 export const renderAllBook = (
   bookdata,
@@ -206,22 +245,23 @@ export const renderAllBook = (
   newStatus,
   setNewStatus,
   loading,
-  setLoading
+  setLoading,
+  status
 ) => {
   return Object.keys(bookdata).map((date, idate) => {
-    const currentDate = dayjs(new Date()).format("YYYY MM DD");
+    const currentDate = dayjs(new Date()).format('YYYY MM DD')
     const checkDate =
-      dayjs(date).isAfter(currentDate) || dayjs(date).isSame(currentDate);
+      dayjs(date).isAfter(currentDate) || dayjs(date).isSame(currentDate)
 
     if (checkDate) {
       return (
         <WrapBook
           bg={idate}
           key={idate}
-          admin={admin ? admin.toString() : "false"}
+          admin={admin ? admin.toString() : 'false'}
         >
           <DateText
-            admin={admin ? admin.toString() : "false"}
+            admin={admin ? admin.toString() : 'false'}
             to={
               !admin
                 ? {
@@ -235,7 +275,7 @@ export const renderAllBook = (
             }
           >
             <DateRange style={{ marginRight: 4 }} />
-            {dayjs(date).format("D MMM YYYY")}
+            {dayjs(date).format('D MMM YYYY')}
           </DateText>
           {renderListBook(
             bookdata,
@@ -246,28 +286,29 @@ export const renderAllBook = (
             setNewStatus,
             newStatus,
             loading,
-            setMore
+            setMore,
+            status
           )}
         </WrapBook>
-      );
+      )
     }
-  });
-};
+  })
+}
 const DateText = styled(Link)`
-  font-size: ${props => (props.admin === "true" ? "16px" : "18px")};
+  font-size: ${props => (props.admin === 'true' ? '16px' : '18px')};
   padding-bottom: 6px;
   font-weight: bold;
   color: #304ffe;
   display: flex;
   align-items: center;
-  text-decoration: ${props => props.admin === "true" && "none"};
-  cursor: ${props => props.admin === "true" && "default"};
-`;
+  text-decoration: ${props => props.admin === 'true' && 'none'};
+  cursor: ${props => props.admin === 'true' && 'default'};
+`
 
 const WrapBook = styled.div`
-  padding: ${props => (props.admin === "true" ? "12px" : "18px")};
+  padding: ${props => (props.admin === 'true' ? '12px' : '18px')};
   /* border-top: rgba(255, 255, 255, 0.4) 2px solid; */
   border-bottom: rgba(0, 0, 0, 0.075) 8px solid;
   background: ${props =>
-    props.bg % 2 === 0 ? "rgba(73, 148, 218, 0.125)" : "transparent"};
-`;
+    props.bg % 2 === 0 ? 'rgba(73, 148, 218, 0.125)' : 'transparent'};
+`

@@ -81,7 +81,6 @@ const ListScreen = ({ history }) => {
       Object.keys(bookdata).length > 0
     ) {
       setOnBook("loading");
-      console.log("ListScreen.js |bookdata[datebook]| = ", bookdata[datebook]);
       if (bookdata[datebook]) {
         const findbook = bookdata[datebook].find(res => res.bookid === bookid);
         if (pathname === bookid && findbook) {
