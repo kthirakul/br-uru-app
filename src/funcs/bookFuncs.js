@@ -328,6 +328,13 @@ export const removeBook = (
   const mouth = dayjs(datebook).format('YYYY,MM')
   const date = dayjs(datebook).format('YYYY,MM,DD')
   let getbookdata = false
+
+  const emptyMonth = Object.keys(bookdata).map((res, i) => {
+    return res.slice(0, 7)
+  })
+
+  console.log('bookFuncs.js |emptyMonth| = ', emptyMonth)
+
   axios
     .delete(`/book/${mouth}/${date}/${bookid}`)
     .then(() => {
@@ -335,6 +342,7 @@ export const removeBook = (
     })
     .then(() => {
       localStorage.removeItem('mybook')
+
       if (Object.keys(bookdata[date]).length === 1) {
         axios.delete(`/empty/${mouth}/${date}`).then(() => {
           axios
@@ -378,6 +386,31 @@ export const removeBook = (
             dispatch({
               type: FETCH_BOOKDATE,
               payload: res.data
+            })
+            return res.data
+          })
+          .then(data => {
+            let months = []
+            data.forEach((res, i) => {
+              Object.keys(res).length > 0 &&
+                months.push(Object.keys(res)[0].slice(0, 7))
+            })
+            return months
+          })
+          .then(months => {
+            const monthRemove = emptyMonth.find((res, i) => {
+              if (months[i]) {
+                return res !== months[i]
+              }
+            })
+            return monthRemove
+          })
+          .then(monthRemove => {
+            axios.delete(`/month/${monthRemove}`).catch(() => {
+              if (window.location.pathname !== '/error') {
+                localStorage.removeItem('mybook')
+                window.location.href = '/error'
+              }
             })
           })
           .then(() => {

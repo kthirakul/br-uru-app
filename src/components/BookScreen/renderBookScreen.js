@@ -1589,6 +1589,12 @@ const WrapChoose = styled.div`
       !props.head && props.hold !== props.menu && 'rgba(0, 0, 0, 0.125)'};
     color: ${props => !props.head && props.hold !== props.menu && 'black'};
   }
+  :active {
+    background: ${props =>
+      !props.head && props.hold === props.menu
+        ? 'rgba(0, 0, 0, 0.7)'
+        : 'transparent'};
+  }
 `
 
 // <-- renderListBook
@@ -1635,7 +1641,6 @@ const WrapSentEmail = styled.span`
   margin-top: 22px;
   border-radius: 99px;
   overflow: hidden;
-
   border: 2px #515bff solid;
 `
 

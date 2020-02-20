@@ -173,10 +173,6 @@ const BookScreen = ({ history }) => {
     bookid: ''
   })
 
-
-
-
-
   useEffect(() => {
     if ((editbook === 'pick' && bookPack.roombook) || hold === '') {
       oldTimeReset(keepOldData, dispatch, bookdata, bookPack)
@@ -280,7 +276,6 @@ const BookScreen = ({ history }) => {
       }
     }
   }
-
 
   return (
     <WrapContainer

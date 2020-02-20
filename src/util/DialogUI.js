@@ -61,17 +61,6 @@ const DialogUI = ({
           {title}
         </WrapTitle>
       </Title>
-      {/* <span style={{ display: "flex", alignItems: "center" }}>
-        <AssignmentLateOutlined style={{ marginRight: 2 }} /> รอหนังสือร้องขอ
-      </span>
-      ,
-      <span style={{ display: "flex", alignItems: "center" }}>
-        <AssignmentLateOutlined style={{ marginRight: 2 }} /> รอการยืนยัน
-      </span>
-      ,
-      <span style={{ display: "flex", alignItems: "center" }}>
-        <AssignmentTurnedInOutlined style={{ marginRight: 2 }} /> ยืนยันแล้ว
-      </span> */}
       <Content>{detail}</Content>
       <Action>
         {action && action.length > 0
