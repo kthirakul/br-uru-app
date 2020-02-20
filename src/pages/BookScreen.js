@@ -2,6 +2,7 @@ import 'date-fns'
 import React, { useState, useRef, useContext, useEffect } from 'react'
 import {} from 'react-router-dom'
 import Context from '../store/Context'
+import dayjs from 'dayjs'
 import jwtDecode from 'jwt-decode'
 import styled from 'styled-components'
 import WrapContainer from '../util/WrapContainer'
@@ -23,6 +24,7 @@ import {
   detailDialog,
   renderEditBook,
   dialogRemove,
+  dialogRemoveMonth,
   onSetEdit,
   renderAdmin,
   dialogChangeStatus,
@@ -32,8 +34,7 @@ import {
   oldTimeReset,
   removeBook,
   onChangeReqSet,
-  onChangeContact,
-  keepBookMonth
+  onChangeContact
 } from '../funcs/bookFuncs'
 
 const BookScreen = ({ history }) => {
@@ -93,6 +94,7 @@ const BookScreen = ({ history }) => {
     sentBefore: 0,
     expDay: 0
   })
+  const [monthDel, setMonthDel] = useState('')
   const admin = userData.email === 'br.uru.app@gmail.com' ? true : false
 
   useEffect(() => {
@@ -274,6 +276,18 @@ const BookScreen = ({ history }) => {
           open: open
         }
       }
+      if (addLog === 'clear') {
+        const monthshow = dayjs(monthDel).format('MMMM YYYY')
+        return {
+          title: `ล้างการจองในเดือน ${monthshow}`,
+          detail: dialogRemoveMonth(monthshow),
+          action: ['ปิดหน้าต่าง', 'ล้างการจอง'],
+          close: () => setOpen(false),
+          icon: <DeleteForeverOutlined style={{ marginRight: 6 }} />,
+          loading: loading,
+          open: open
+        }
+      }
     }
   }
 
@@ -287,6 +301,7 @@ const BookScreen = ({ history }) => {
         newStatus={newStatus}
         setLoading={setLoading}
         dispatch={dispatch}
+        month={monthDel}
       />
       {emailVerified ? (
         <WrapAll>
@@ -359,7 +374,8 @@ const BookScreen = ({ history }) => {
                     setPage,
                     setHold,
                     findDel,
-                    setFindDel
+                    setFindDel,
+                    setMonthDel
                   })}
             </WrapInList>
           </WrapListBook>

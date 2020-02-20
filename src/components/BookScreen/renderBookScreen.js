@@ -27,7 +27,9 @@ import {
   Call,
   Send,
   DeleteSweep,
-  ClearAll
+  ClearAll,
+  DeleteForever,
+  NoSimOutlined
 } from '@material-ui/icons'
 import { CircularProgress, Button, Grid } from '@material-ui/core'
 import dayjs from 'dayjs'
@@ -42,7 +44,8 @@ import {
   resetReqSet,
   onReqSetUpdate,
   onUpdateContact,
-  undoContact
+  undoContact,
+  clearMonth
 } from '../../funcs/bookFuncs'
 import { emptyFunc } from '../../funcs/emptyFunc'
 import relativeTime from 'dayjs/plugin/relativeTime'
@@ -102,6 +105,14 @@ const renderNoVerified = setOpen => {
 
 export const dialogRemove = () => {
   return <WrapContent>คุณต้องการลบการจองนี้หรือไม่?</WrapContent>
+}
+
+export const dialogRemoveMonth = month => {
+  return (
+    <WrapContent>
+      คุณต้องการล้างการจองทั้งหมดในเดือน {month} หรือไม่?
+    </WrapContent>
+  )
 }
 
 export const dialogChangeStatus = () => {
@@ -529,6 +540,12 @@ export const renderAdmin = d => {
       )
 
     case 'ล้างข้อมูล':
+      const allMonths = Object.keys(d.bookdata).map((res, i) => {
+        return res.slice(0, 7)
+      })
+
+      const uniqMonth = [...new Set(allMonths)]
+
       return (
         <WrapAdmin>
           <HeaderAdmin item={item} d={d} />
@@ -571,8 +588,31 @@ export const renderAdmin = d => {
             <WrapBookSetting>
               <BookSettingHead>
                 <ClearAll style={{ marginRight: 4 }} />
-                ล้างข้อมูลรายเดือน
+                ล้างการจองรายเดือน
               </BookSettingHead>
+              {d.loading ? (
+                <EditLoading up>
+                  <CircularProgress size={40} style={{ marginRight: 12 }} />
+                  กำลังล้างการจอง...
+                </EditLoading>
+              ) : uniqMonth.length > 0 ? (
+                uniqMonth.map((res, i) => (
+                  <ItemSet up key={i} onClick={() => clearMonth(d, res)}>
+                    <DeleteForever style={{ marginRight: 4 }} />
+                    <TextReqSet all>
+                      {dayjs(res).format('MMMM YYYY')}
+                    </TextReqSet>
+                  </ItemSet>
+                ))
+              ) : (
+                <NoData del>
+                  <NoSimOutlined
+                    style={{ marginBottom: 12 }}
+                    fontSize="large"
+                  />
+                  ไม่มีรายการจอง
+                </NoData>
+              )}
             </WrapBookSetting>
           </WrapAuto>
         </WrapAdmin>
@@ -1153,7 +1193,8 @@ const ButtonEdit = styled.div`
 const EditLoading = styled.div`
   display: flex;
   justify-content: center;
-  margin-top: 40px;
+  margin-top: ${props => (props.up ? '12px' : '40px')};
+  align-items: ${props => props.up && 'center'};
 `
 
 const EditButton = styled.div`

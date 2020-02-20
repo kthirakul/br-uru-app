@@ -8,7 +8,7 @@ import {
   Button
 } from '@material-ui/core'
 import styled from 'styled-components'
-import { changeStatus } from '../funcs/bookFuncs'
+import { changeStatus, removeInMonth } from '../funcs/bookFuncs'
 import {
   AssignmentLateOutlined,
   AssignmentTurnedInOutlined
@@ -26,7 +26,8 @@ const DialogUI = ({
   icon,
   newStatus,
   setLoading,
-  dispatch
+  dispatch,
+  month
 }) => {
   const chooseFuncs = res => {
     switch (res) {
@@ -48,6 +49,9 @@ const DialogUI = ({
         changeStatus(res, newStatus, close, setLoading, dispatch)
         break
 
+      case 'ล้างการจอง':
+        removeInMonth(month, dispatch, setLoading, close)
+        break
       default:
         close()
         break

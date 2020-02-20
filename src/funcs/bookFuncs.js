@@ -333,8 +333,6 @@ export const removeBook = (
     return res.slice(0, 7)
   })
 
-  console.log('bookFuncs.js |emptyMonth| = ', emptyMonth)
-
   axios
     .delete(`/book/${mouth}/${date}/${bookid}`)
     .then(() => {
@@ -687,7 +685,52 @@ export const undoContact = (d, status) => {
   }
 }
 
-export const keepBookMonth = bookdata => {
-  console.log('bookFuncs.js |bookdata| = ', Object.keys(bookdata))
-  return
+export const clearMonth = (d, res) => {
+  d.setOpen(true)
+  d.setMonthDel(res)
+  sessionStorage.setItem('addLog', 'clear')
+}
+
+export const removeInMonth = (month, dispatch, setLoading, close) => {
+  console.log('bookFuncs.js |month| = ', month)
+  close()
+  setLoading(true)
+  axios
+    .delete(`month/${month}`)
+    .then(() => {
+      localStorage.removeItem('mybook')
+    })
+    .then(() => {
+      axios
+        .get('books')
+        .then(res => {
+          dispatch({
+            type: FETCH_BOOKDATE,
+            payload: res.data
+          })
+        })
+        .then(() => {
+          axios
+            .get('/mybook')
+            .then(res => {
+              dispatch({
+                type: FETCH_MYBOOK,
+                payload: res.data
+              })
+              setLoading(false)
+            })
+            .catch(() => {
+              if (window.location.pathname !== '/error') {
+                localStorage.removeItem('mybook')
+                window.location.href = '/error'
+              }
+            })
+        })
+        .catch(() => {
+          if (window.location.pathname !== '/error') {
+            localStorage.removeItem('mybook')
+            window.location.href = '/error'
+          }
+        })
+    })
 }
