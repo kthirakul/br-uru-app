@@ -50,7 +50,8 @@ const BookScreen = ({ history }) => {
     storeBooking,
     keepOldData,
     editState,
-    contactdata
+    contactdata,
+    monthExp
   } = context
 
   const {
@@ -375,7 +376,8 @@ const BookScreen = ({ history }) => {
                     setHold,
                     findDel,
                     setFindDel,
-                    setMonthDel
+                    setMonthDel,
+                    monthExp
                   })}
             </WrapInList>
           </WrapListBook>

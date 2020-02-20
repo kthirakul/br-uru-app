@@ -540,12 +540,6 @@ export const renderAdmin = d => {
       )
 
     case 'ล้างข้อมูล':
-      const allMonths = Object.keys(d.bookdata).map((res, i) => {
-        return res.slice(0, 7)
-      })
-
-      const uniqMonth = [...new Set(allMonths)]
-
       return (
         <WrapAdmin>
           <HeaderAdmin item={item} d={d} />
@@ -588,15 +582,15 @@ export const renderAdmin = d => {
             <WrapBookSetting>
               <BookSettingHead>
                 <ClearAll style={{ marginRight: 4 }} />
-                ล้างการจองรายเดือน
+                ล้างการจองรายเดือน (ที่หมดอายุแล้ว)
               </BookSettingHead>
               {d.loading ? (
                 <EditLoading up>
-                  <CircularProgress size={40} style={{ marginRight: 12 }} />
+                  <CircularProgress size={35} style={{ marginRight: 12 }} />
                   กำลังล้างการจอง...
                 </EditLoading>
-              ) : uniqMonth.length > 0 ? (
-                uniqMonth.map((res, i) => (
+              ) : d.monthExp.length > 0 ? (
+                d.monthExp.map((res, i) => (
                   <ItemSet up key={i} onClick={() => clearMonth(d, res)}>
                     <DeleteForever style={{ marginRight: 4 }} />
                     <TextReqSet all>
@@ -606,11 +600,8 @@ export const renderAdmin = d => {
                 ))
               ) : (
                 <NoData del>
-                  <NoSimOutlined
-                    style={{ marginBottom: 12 }}
-                    fontSize="large"
-                  />
-                  ไม่มีรายการจอง
+                  <NoSimOutlined />
+                  ไม่มีรายการจองที่หมดอายุ
                 </NoData>
               )}
             </WrapBookSetting>

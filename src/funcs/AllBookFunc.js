@@ -1,12 +1,15 @@
 const dayjs = require('dayjs')
 
 export const filterBook = payload => {
+  let expMonthDel = []
+
   payload.forEach((monthTime, imonth) => {
     Object.entries(monthTime).forEach(date => {
       Object.values(date[1]).forEach(res => {
         const currDate = dayjs(new Date()).format('YYYY,MM,DD')
         const expDate = dayjs(res.expired).format('YYYY,MM,DD')
         if (dayjs(expDate).isBefore(currDate)) {
+          expMonthDel.push(date[0])
           delete payload[imonth][date[0]][res.bookid]
         }
       })
@@ -39,8 +42,17 @@ export const filterBook = payload => {
       })
     })
   })
+  const newMonth = expMonthDel.map(res => {
+    if (dayjs(res.slice(0, 7)).isBefore(dayjs(new Date()).format('YYYY,MM'))) {
+      return res.slice(0, 7)
+    }
+  })
 
-  return Object.keys(dateData).length > 0 ? dateData : []
+  const expMonth = [
+    ...new Set(newMonth.sort((a, b) => a - b).filter(res => res !== undefined))
+  ]
+
+  return Object.keys(dateData).length > 0 ? { dateData, expMonth } : []
   // return [];
 }
 

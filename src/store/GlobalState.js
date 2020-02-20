@@ -19,7 +19,8 @@ const GlobalState = ({ children }) => {
     firstLoad: false,
     mybook: [],
     oldTimeStart: null,
-    oldTimeEnd: null
+    oldTimeEnd: null,
+    monthExp: []
   }
 
   const [state, dispatch] = useReducer(reducers, initailState)
@@ -175,7 +176,8 @@ const GlobalState = ({ children }) => {
         storeBooking,
         keepOldData,
         server,
-        editState
+        editState,
+        monthExp: state.monthExp
       }}
     >
       {children}
