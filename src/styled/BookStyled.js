@@ -1,4 +1,5 @@
 import styled from 'styled-components'
+import { Grid } from '@material-ui/core'
 
 export const WrapAdmin = styled.div`
   display: flex;
@@ -133,3 +134,22 @@ export const SettingLoading = styled.div`
   align-items: center;
   flex-direction: column;
 `
+
+export const WLoadAllUser = styled.div`
+  display: flex;
+  justify-content: center;
+  margin-top: 24px;
+`
+
+export const WAllUser = styled(Grid)`
+  padding: 16px;
+  cursor: ${p => (p.topic ? 'default' : 'pointer')};
+  transition: 0.1s;
+  background: ${props => props.topic && '#ffa4a440'};
+  :hover {
+    background: ${props => !props.topic && 'rgba(255, 255, 255, 0.4)'};
+  }
+  border-bottom: 2px solid
+    ${p => (p.topic ? 'rgba(0, 0, 0, 0.1)' : 'rgba(0, 0, 0, 0.06)')};
+`
+export const WEAllUser = styled(Grid)``

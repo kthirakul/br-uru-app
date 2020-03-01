@@ -16,7 +16,7 @@ const GlobalState = ({ children }) => {
     userData: {},
     logged: null,
     contactdata: [],
-    firstLoad: false,
+    firstLoad: true,
     mybook: [],
     oldTimeStart: null,
     oldTimeEnd: null,
@@ -95,6 +95,12 @@ const GlobalState = ({ children }) => {
     proceed: {},
     waiting: {}
   })
+
+  const [alluser, setAlluser] = useState([])
+  const allUserState = {
+    alluser,
+    setAlluser
+  }
 
   const mybookState = {
     booksort,
@@ -177,7 +183,8 @@ const GlobalState = ({ children }) => {
         keepOldData,
         server,
         editState,
-        monthExp: state.monthExp
+        monthExp: state.monthExp,
+        allUserState
       }}
     >
       {children}

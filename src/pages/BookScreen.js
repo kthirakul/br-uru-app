@@ -34,7 +34,8 @@ import {
   oldTimeReset,
   removeBook,
   onChangeReqSet,
-  onChangeContact
+  onChangeContact,
+  getAllUser
 } from '../funcs/bookFuncs'
 
 const BookScreen = ({ history }) => {
@@ -51,7 +52,8 @@ const BookScreen = ({ history }) => {
     keepOldData,
     editState,
     contactdata,
-    monthExp
+    monthExp,
+    allUserState
   } = context
 
   const {
@@ -148,6 +150,17 @@ const BookScreen = ({ history }) => {
     }
   }, [history.location.state])
 
+  console.log('BookScreen.js |firstLoad| = ', firstLoad)
+
+  useEffect(() => {
+    if (firstLoad === false) {
+      if (hold === 'จัดการผู้ใช้' && allUserState.alluser.length === 0) {
+        getAllUser(allUserState)
+      }
+    }
+  }, [hold])
+
+  console.log('BookScreen.js |allUserState.alluser| = ', allUserState.alluser)
   const userSelf = jwtDecode(localStorage.FBIdToken)
   const emailVerified = userSelf.email_verified
   // <-- Ref
@@ -377,7 +390,8 @@ const BookScreen = ({ history }) => {
                     findDel,
                     setFindDel,
                     setMonthDel,
-                    monthExp
+                    monthExp,
+                    allUserState
                   })}
             </WrapInList>
           </WrapListBook>

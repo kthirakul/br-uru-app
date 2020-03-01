@@ -65,7 +65,10 @@ import {
   WrapSaveReqSet,
   ErrorReqSet,
   TextReqSet,
-  SettingLoading
+  SettingLoading,
+  WLoadAllUser,
+  WAllUser,
+  WEAllUser
 } from '../../styled/BookStyled'
 import { renderAllBook } from '../AllBooks/AllBookComps'
 dayjs.extend(relativeTime)
@@ -318,20 +321,21 @@ export const renderAdmin = d => {
         d.reqSet.expDay > d.reqSet.sentBefore
 
       const checkedContact =
-        (d.keepContact.linkmap.trim() === d.contactdata.linkmap.trim() &&
+        d.keepContact &&
+        ((d.keepContact.linkmap.trim() === d.contactdata.linkmap.trim() &&
           d.keepContact.department.trim() === d.contactdata.department.trim() &&
           d.keepContact.linkview.trim() === d.contactdata.linkview.trim() &&
           d.keepContact.tell.trim() === d.contactdata.tell.trim() &&
           d.keepContact.location.trim() === d.contactdata.location.trim() &&
           d.keepContact.university.trim() === d.contactdata.university.trim() &&
           d.keepContact.nameDep.trim() === d.contactdata.nameDep.trim()) ||
-        d.keepContact.linkmap.trim() === '' ||
-        d.keepContact.department.trim() === '' ||
-        d.keepContact.linkview.trim() === '' ||
-        d.keepContact.tell.trim() === '' ||
-        d.keepContact.location.trim() === '' ||
-        d.keepContact.university.trim() === '' ||
-        d.keepContact.nameDep.trim() === ''
+          d.keepContact.linkmap.trim() === '' ||
+          d.keepContact.department.trim() === '' ||
+          d.keepContact.linkview.trim() === '' ||
+          d.keepContact.tell.trim() === '' ||
+          d.keepContact.location.trim() === '' ||
+          d.keepContact.university.trim() === '' ||
+          d.keepContact.nameDep.trim() === '')
 
       return (
         <WrapAdmin>
@@ -613,6 +617,7 @@ export const renderAdmin = d => {
       return (
         <WrapAdmin>
           <HeaderAdmin item={item} d={d} />
+          <WrapAuto></WrapAuto>
         </WrapAdmin>
       )
 
@@ -620,6 +625,49 @@ export const renderAdmin = d => {
       return (
         <WrapAdmin>
           <HeaderAdmin item={item} d={d} />
+          <WAllUser topic container>
+            <WEAllUser xs={3} item>
+              สมัครเมื่อ
+            </WEAllUser>
+            <WEAllUser xs={3} item>
+              ชื่อ-นามสกุล
+            </WEAllUser>
+            <WEAllUser xs={3} item>
+              สถานะ
+            </WEAllUser>
+            <WEAllUser xs={3} item>
+              หน่วยงาน
+            </WEAllUser>
+          </WAllUser>
+          {d.allUserState.alluser.length === 0 ? (
+            <WLoadAllUser>
+              <CircularProgress />
+            </WLoadAllUser>
+          ) : (
+            <WrapAuto>
+              {d.allUserState.alluser.map(res => {
+                const createAt = dayjs(new Date(res.createdAt)).format(
+                  'DD/MM/YYYY'
+                )
+                return (
+                  <WAllUser container>
+                    <WEAllUser xs={3} item>
+                      {createAt}
+                    </WEAllUser>
+                    <WEAllUser xs={3} item>
+                      {res.username}
+                    </WEAllUser>
+                    <WEAllUser xs={3} item>
+                      {res.userstatus}
+                    </WEAllUser>
+                    <WEAllUser xs={3} item>
+                      {res.from}
+                    </WEAllUser>
+                  </WAllUser>
+                )
+              })}
+            </WrapAuto>
+          )}
         </WrapAdmin>
       )
 

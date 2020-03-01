@@ -734,3 +734,20 @@ export const removeInMonth = (month, dispatch, setLoading, close) => {
         })
     })
 }
+
+export const getAllUser = alluserState => {
+  axios
+    .get('alluser')
+    .then(res => {
+      const newData = res.data.sort(
+        (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+      )
+      alluserState.setAlluser(newData)
+    })
+    .catch(() => {
+      if (window.location.pathname !== '/error') {
+        localStorage.removeItem('mybook')
+        window.location.href = '/error'
+      }
+    })
+}
