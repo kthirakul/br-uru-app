@@ -1,11 +1,11 @@
 const dayjs = require('dayjs')
 
-export const filterBook = payload => {
+export const filterBook = (payload) => {
   let expMonthDel = []
 
   payload.forEach((monthTime, imonth) => {
-    Object.entries(monthTime).forEach(date => {
-      Object.values(date[1]).forEach(res => {
+    Object.entries(monthTime).forEach((date) => {
+      Object.values(date[1]).forEach((res) => {
         const currDate = dayjs(new Date()).format('YYYY,MM,DD')
         const expDate = dayjs(res.expired).format('YYYY,MM,DD')
         if (dayjs(expDate).isBefore(currDate)) {
@@ -24,7 +24,7 @@ export const filterBook = payload => {
 
   let dateBP = []
 
-  payload.forEach(res => {
+  payload.forEach((res) => {
     const dateKeys = Object.keys(res)
     dateKeys.sort((a, b) => {
       return new Date(b) - new Date(a)
@@ -34,7 +34,7 @@ export const filterBook = payload => {
 
   let dateData = {}
   dateBP.forEach((res, i) => {
-    res.forEach(data => {
+    res.forEach((data) => {
       dateData[data] = Object.values(payload[i][data]).sort((a, b) => {
         const atime = parseFloat(dayjs(a.timeStart).format('HH.mm'))
         const btime = parseFloat(dayjs(b.timeStart).format('HH.mm'))
@@ -42,14 +42,19 @@ export const filterBook = payload => {
       })
     })
   })
-  const newMonth = expMonthDel.map(res => {
+  const newMonth = expMonthDel.map((res) => {
     if (dayjs(res.slice(0, 7)).isBefore(dayjs(new Date()).format('YYYY,MM'))) {
       return res.slice(0, 7)
+    } else {
+      console.log('AllBookFunc.js |1| = ', 1)
+      return null
     }
   })
 
   const expMonth = [
-    ...new Set(newMonth.sort((a, b) => a - b).filter(res => res !== undefined))
+    ...new Set(
+      newMonth.sort((a, b) => a - b).filter((res) => res !== undefined)
+    ),
   ]
 
   return Object.keys(dateData).length > 0 ? { dateData, expMonth } : []
@@ -66,7 +71,7 @@ export const filterMyBook = (mybook, bookdata, userid) => {
 
   dateBP.forEach((res, i) => {
     if (bookdata[res]) {
-      dateData[res] = bookdata[res].filter(res => res.userid === userid)
+      dateData[res] = bookdata[res].filter((res) => res.userid === userid)
     }
   })
 
@@ -91,34 +96,34 @@ export const filterChange = (bookdata, status) => {
   return newBook
 }
 
-export const countBook = bookdef => {
+export const countBook = (bookdef) => {
   let count = {
     confirm: 0,
     proceed: 0,
-    waiting: 0
+    waiting: 0,
   }
   const bookValues = Object.values(bookdef.default)
-  bookValues.forEach(res => {
-    Object.values(res).forEach(res => {
+  bookValues.forEach((res) => {
+    Object.values(res).forEach((res) => {
       switch (res.bookstatus) {
         case 'ยืนยันแล้ว':
           count = {
             ...count,
-            confirm: count.confirm + 1
+            confirm: count.confirm + 1,
           }
           break
 
         case 'รอการยืนยัน':
           count = {
             ...count,
-            proceed: count.proceed + 1
+            proceed: count.proceed + 1,
           }
           break
 
         case 'รอหนังสือร้องขอ':
           count = {
             ...count,
-            waiting: count.waiting + 1
+            waiting: count.waiting + 1,
           }
           break
         default:
@@ -130,7 +135,7 @@ export const countBook = bookdef => {
     confirm: count.confirm,
     proceed: count.proceed,
     waiting: count.waiting,
-    all: count.confirm + count.proceed + count.waiting
+    all: count.confirm + count.proceed + count.waiting,
   }
 }
 
